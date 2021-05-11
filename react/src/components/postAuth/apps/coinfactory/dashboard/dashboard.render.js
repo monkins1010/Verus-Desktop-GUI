@@ -28,6 +28,7 @@ import IconButton from '@material-ui/core/IconButton';
 import WalletPaper from "../../../../../containers/WalletPaper/WalletPaper";
 import { openAddCoinModal } from "../../../../../actions/actionDispatchers";
 import FormDialog from  "../../../../../containers/FormDialog/FormDialog";
+import TextField from '@material-ui/core/TextField';
 
 export const DashboardRender = function() {
   return (
@@ -46,44 +47,54 @@ export const DashboardRender = function() {
           className="card-title"
           style={{ fontSize: 16, margin: 0, width: "100%" }}
         >
-          {"Create your own Coin"}
+          {"Create your own Token"}
         </h6>
         <div style={{ display: "flex", flexWrap: "wrap", marginTop: 10 }}>
-        <button
-                className="btn btn-primary"
-                type="button"
-                onClick={null}
-                style={{
-                  fontSize: 14,
-                  backgroundColor: "rgb(49, 101, 212)",
-                  borderWidth: 1,
-                  borderColor: "rgb(49, 101, 212)",
-                  paddingRight: 20,
-                  paddingLeft: 20,
-                  width: "100%"
-                }}
-              >
-                <strong>{"Create Coin"}</strong>
-              </button>
-
+        
+        <TextField
+          helperText={
+            "Define the name of the token, note: you have to own the identity of this name"
+          }
+          label="Token Name"
+          name="tokenName"
+          style={{ marginTop: 5, width: "100%" }}
+        />
+        <TextField
+          helperText={
+            "Set the initial supply of the tokens e.g. 10000000"
+          }
+          label="Amount"
+          name="tokenAmount"
+          style={{ marginTop: 5, width: "100%" }}
+        />
+          <TextField
+          helperText={
+            "comma seperated list of addresses to equally distribute the coins to"
+          }
+          label="address1,address2..."
+          name="tokenAddresses"
+          multiline
+          rowsMax={4}
+          style={{ marginTop: 5, width: "100%" }}
+        />
+      <button
+        className="btn btn-primary"
+        type="button"
+        style={{
+          fontSize: 14,
+          backgroundColor: "rgb(49, 101, 212)",
+          borderWidth: 1,
+          borderColor: "rgb(49, 101, 212)"
+        }}
+        onClick={ null }
+      >
+        {"Create Token"}
+      </button>
 
         </div>
-        <React.Fragment>
-        <FormDialog
-          title={`Search Currencies`}
-        />
-       
-      </React.Fragment>
+
       </WalletPaper>
-      <WalletPaper style={{ marginBottom: 16, display: "flex", flexDirection: "column" }}>
-        <h6
-          className="card-title"
-          style={{ fontSize: 14, margin: 0, width: "100%" }}
-        >
-          {"Mining/Staking Overview"}
-        </h6>
-        {DashboardRenderMiningCards.call(this)}
-      </WalletPaper>
+
     </div>
   );
 };
