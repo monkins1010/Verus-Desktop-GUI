@@ -1,11 +1,12 @@
 import React from "react";
 import AppsStyles from './apps.styles'
-import { WALLET, MINING, VERUSID, SETTINGS, MULTIVERSE } from '../../../util/constants/componentConstants'
+import { WALLET, MINING, VERUSID, SETTINGS, MULTIVERSE, COINFACTORY } from '../../../util/constants/componentConstants'
 import Mining from './mining/mining'
 import Wallet from './wallet/wallet'
 import Settings from './settings/settings'
 import VerusId from './verusId/verusId'
 import Multiverse from './multiverse/multiverse'
+import Coinfactory from './coinfactory/coinfactory'
 import fiatList from '../../../util/constants/fiatList'
 import Tooltip from '@material-ui/core/Tooltip';
 
@@ -27,6 +28,10 @@ export const AppsRender = function() {
     ),
     [MULTIVERSE]: (
       <Multiverse setCards={this.getCards} setTabs={this.getSecondaryTabs} />
+    )
+    ,
+    [COINFACTORY]: (
+      <Coinfactory setCards={this.getCards} setTabs={this.getSecondaryTabs} />
     )
   };
 
@@ -124,7 +129,7 @@ export const AppsRender = function() {
                     ? "active-nav-tab-container"
                     : "nav-tab-container"
                 }`}
-              >
+               >
                 <a
                   className={`nav-link text-center ${
                     currentApp === MINING
@@ -159,7 +164,7 @@ export const AppsRender = function() {
                     ? "active-nav-tab-container"
                     : "nav-tab-container"
                 }`}
-              >
+               >
                 <a
                   className={`nav-link text-center ${
                     currentApp === MULTIVERSE
@@ -186,6 +191,41 @@ export const AppsRender = function() {
                     style={currentApp !== MULTIVERSE && tabsMinimised ? {} : AppsStyles.navigationTabIcon}
                   />
                   {currentApp !== MULTIVERSE && tabsMinimised ? null : "Multiverse"}
+                </a>
+              </li>
+              <li
+                className={`nav-item ${
+                  currentApp === COINFACTORY
+                    ? "active-nav-tab-container"
+                    : "nav-tab-container"
+                }`}
+               >
+                <a
+                  className={`nav-link text-center ${
+                    currentApp === COINFACTORY
+                      ? "active-nav-tab"
+                      : "inactive-nav-tab"
+                  }`}
+                  onClick={
+                    currentApp === COINFACTORY
+                      ? () => {
+                          return 0;
+                        }
+                      : () => this.selectApp(COINFACTORY)
+                  }
+                  style={
+                    currentApp !== COINFACTORY && tabsMinimised
+                      ? AppsStyles.mainNavigationTabWithoutText
+                      : AppsStyles.mainNavigationTabWithText
+                  }
+                >
+                  <i
+                    className={`fas fa-coins ${
+                      currentApp === COINFACTORY ? "" : "inactive-nav-tab-icon"
+                    }`}
+                    style={currentApp !== COINFACTORY && tabsMinimised ? {} : AppsStyles.navigationTabIcon}
+                  />
+                  {currentApp !== COINFACTORY && tabsMinimised ? null : "Coin Factory"}
                 </a>
               </li>
             </ul>
