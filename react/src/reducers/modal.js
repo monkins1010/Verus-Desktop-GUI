@@ -10,7 +10,8 @@ import {
   SEND_COIN,
   RECEIVE_COIN,
   CREATE_IDENTITY,
-  SHIELDCOINBASE
+  SHIELDCOINBASE,
+  CREATE_SIMPLE_TOKEN
 } from "../util/constants/componentConstants";
 
 export const modal = (state = {
@@ -27,6 +28,11 @@ export const modal = (state = {
     chainTicker: null,
   },
   [CREATE_IDENTITY]: {
+    chainTicker: null,
+    nameReservation: null,
+    modalType: null
+  },
+  [CREATE_SIMPLE_TOKEN]: {
     chainTicker: null,
     nameReservation: null,
     modalType: null

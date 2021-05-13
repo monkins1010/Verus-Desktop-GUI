@@ -42,7 +42,8 @@ class Multiverse extends React.Component {
 
   componentDidMount() {
     //Set default navigation path to dashboard if wallet is opened without a sub-navigation location
-    if (!this.props.mainPathArray[3]) this.props.dispatch(setMainNavigationPath(`${this.props.mainPathArray.join('/')}/${DASHBOARD}`)) 
+    if (!this.props.mainPathArray[3]) 
+    this.props.dispatch(setMainNavigationPath(`${this.props.mainPathArray.join('/')}/${DASHBOARD}`)) 
   }
 
   updateSearchTerm(term) {

@@ -16,11 +16,14 @@ import {
   API_GET_MININGINFO,
   MINING_FUNCTIONS,
   API_ERROR,
-  FIX_CHARACTER
+  FIX_CHARACTER,
+  CREATE_SIMPLE_TOKEN
 } from "../../../../util/constants/componentConstants";
 import Dashboard from './dashboard/dashboard'
 import MiningWallet from './miningWallet/miningWallet'
-
+import {
+  CoinfactoryTabsRender
+} from './coinfactory.render'
 import Store from '../../../../store'
 import {
   setMainNavigationPath,
@@ -54,7 +57,6 @@ class Coinfactory extends React.Component {
     }
     
     this.setCards = this.setCards.bind(this)
-    this.calculateMiningStates = this.calculateMiningStates.bind(this)
     this.setTabs = this.setTabs.bind(this)
     this.openDashboard = this.openDashboard.bind(this)
     this.getNativeCoins = this.getNativeCoins.bind(this)
@@ -87,7 +89,7 @@ class Coinfactory extends React.Component {
       })
     }
     
-    this.calculateMiningStates(this.props.activatedCoins)
+   
   }
 
   async toggleStaking(chainTicker) {
@@ -167,18 +169,6 @@ class Coinfactory extends React.Component {
     }
   }
 
-  /*componentWillReceiveProps(nextProps) {
-    if (nextProps != this.props) {
-      this.calculateMiningStates(nextProps.activatedCoins)
-      this.setCards(nextProps.activatedCoins);
-    } 
-  }*/
-  
-  componentDidUpdate(lastProps) {
-    if (lastProps != this.props) {
-      this.calculateMiningStates(this.props.activatedCoins)
-    }
-  }
 
   // Calculates the native coins given the current activated coins
   // and activates the callback function once the state has been changed
@@ -200,42 +190,14 @@ class Coinfactory extends React.Component {
     })
   }
 
-  calculateMiningStates(activatedCoins) {
-    const { miningInfo } = this.props
-    let miningStates = {}
 
-    this.getNativeCoins(activatedCoins, () => {
-      this.state.nativeCoins.map((chainTicker) => {
-        const coinObj = activatedCoins[chainTicker]
-
-        if (miningInfo[coinObj.id]) {
-          const { mergemining, staking, generate, numthreads } = miningInfo[coinObj.id]
-          const mergeMining = mergemining != null && mergemining > 0
-          const mining = generate && numthreads
-  
-          if (staking && mergeMining) miningStates[coinObj.id] = MS_MERGE_MINING_STAKING
-          else if (staking && mining) miningStates[coinObj.id] = MS_MINING_STAKING
-          else if (mergeMining) miningStates[coinObj.id] = MS_MERGE_MINING
-          else if (mining) miningStates[coinObj.id] = MS_MINING
-          else if (staking) miningStates[coinObj.id] = MS_STAKING
-          else miningStates[coinObj.id] = MS_OFF
-        } else {
-          miningStates[coinObj.id] = MS_IDLE
-        }
-      })
-
-      this.setState({ miningStates }, () => {
-        this.setCards(activatedCoins)
-      })
-    })
-  }
 
   openDashboard() {
     this.props.dispatch(setMainNavigationPath(`${getPathParent(this.props.mainPathArray)}/${DASHBOARD}`))
   }
 
   setTabs() {
-    
+    this.props.setTabs(CoinfactoryTabsRender.call(this))
   }
 
   openCoin(wallet) {
@@ -293,14 +255,18 @@ class Coinfactory extends React.Component {
 }
 
 const mapStateToProps = (state) => {
+  const { chainTicker } = state.modal[CREATE_SIMPLE_TOKEN]
   return {
     mainPathArray: state.navigation.mainPathArray,
     activatedCoins: state.coins.activatedCoins,
     miningInfo: state.ledger.miningInfo,
-    balances: state.ledger.balances,
     miningInfoErrors: state.errors[API_GET_MININGINFO],
     loading: state.loading[MINING_FUNCTIONS],
-    mainTraversalHistory: state.navigation.mainTraversalHistory
+    mainTraversalHistory: state.navigation.mainTraversalHistory,
+    activeCoin: state.coins.activatedCoins[chainTicker],
+    balances: state.ledger.balances[chainTicker],
+    addresses: state.ledger.addresses[chainTicker],
+    modalProps: state.modal[CREATE_SIMPLE_TOKEN]
   };
 };
 

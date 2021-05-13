@@ -31,6 +31,9 @@ import FormDialog from  "../../../../../containers/FormDialog/FormDialog";
 import TextField from '@material-ui/core/TextField';
 
 export const DashboardRender = function() {
+
+  const identityChains = Object.keys(this.props.identities)
+
   return (
     <div
       className="col-md-8 col-lg-9"
@@ -50,33 +53,7 @@ export const DashboardRender = function() {
           {"Create your own Token"}
         </h6>
         <div style={{ display: "flex", flexWrap: "wrap", marginTop: 10 }}>
-        
-        <TextField
-          helperText={
-            "Define the name of the token, note: you have to own the identity of this name"
-          }
-          label="Token Name"
-          name="tokenName"
-          style={{ marginTop: 5, width: "100%" }}
-        />
-        <TextField
-          helperText={
-            "Set the initial supply of the tokens e.g. 10000000"
-          }
-          label="Amount"
-          name="tokenAmount"
-          style={{ marginTop: 5, width: "100%" }}
-        />
-          <TextField
-          helperText={
-            "comma seperated list of addresses to equally distribute the coins to"
-          }
-          label="address1,address2..."
-          name="tokenAddresses"
-          multiline
-          rowsMax={4}
-          style={{ marginTop: 5, width: "100%" }}
-        />
+
       <button
         className="btn btn-primary"
         type="button"
@@ -86,9 +63,10 @@ export const DashboardRender = function() {
           borderWidth: 1,
           borderColor: "rgb(49, 101, 212)"
         }}
-        onClick={ null }
+        onClick={ () => this.openCoinfactorysimpleModal(identityChains[0])
+        }
       >
-        {"Create Token"}
+        {"Create Simple Token"}
       </button>
 
         </div>

@@ -1,16 +1,19 @@
 import React from 'react';
+import toast from 'react-simple-toasts';
 import { connect } from 'react-redux';
 import { 
   DashboardRender,
 } from './dashboard.render';
 import Store from '../../../../../store'
 import {
+  CREATE_SIMPLE_TOKEN,
+  API_REGISTER_ID_NAME,
   NATIVE,
   API_GET_INFO,
   API_GET_MININGINFO,
   API_GET_CPU_TEMP,
 } from "../../../../../util/constants/componentConstants";
-import { conditionallyUpdateWallet } from '../../../../../actions/actionDispatchers';
+import { conditionallyUpdateWallet, openModal } from '../../../../../actions/actionDispatchers';
 
 class Dashboard extends React.Component {
   constructor(props) {
@@ -19,6 +22,9 @@ class Dashboard extends React.Component {
     this.state = {
       coinsMining: 0,
       coinsStaking: 0,
+      tokenname: '',
+      tokensupply: '',
+      tokenaddresses: ''
     }
 
     this.updateMineStakeCoins = this.updateMineStakeCoins.bind(this)
@@ -37,6 +43,16 @@ class Dashboard extends React.Component {
 
     this.updateMineStakeCoins()
   }
+
+  openCoinfactorysimpleModal(chainTicker, commitmentData = null) {
+    if(!chainTicker)
+    {toast("Chain not selected from tab menu on left");}
+    else
+    openModal(CREATE_SIMPLE_TOKEN, { modalType: API_REGISTER_ID_NAME, chainTicker, commitmentData })
+  }
+
+
+
 
   updateMineStakeCoins() {
     let coinsStaking = 0, coinsMining = coinsStaking
@@ -70,6 +86,7 @@ function mapStateToPropsFactory(initialState, ownProps) {
       nativeCoins: Object.values(state.coins.activatedCoins).filter(coinObj => { return coinObj.mode === NATIVE }),
       balances: state.ledger.balances,
       cpuLoad: state.system.cpuLoad,
+      identities: state.ledger.identities,
       cpuTemp: state.system.cpuTemp,
       sysTime: state.system.sysTime,
       cpuData: state.system.static ? state.system.static.cpu : {},

@@ -9759,6 +9759,11 @@ react-router@^3.2.1:
     react-is "^16.13.0"
     warning "^3.0.0"
 
+react-simple-toasts@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/react-simple-toasts/-/react-simple-toasts-1.1.2.tgz#c11e6a14519b898d15036fd8bbdb801e508ea82c"
+  integrity sha512-yCnGOZBnwf4V6lUQ2GnvnN2cxkIBwZx6xgG6LeWTSUJ5x/m87XmmljdeiSJCzaqfBg9Yzr/s3d0XUX2R+08B5g==
+
 react-test-renderer@^16.8.6:
   version "16.13.1"
   resolved "https://registry.yarnpkg.com/react-test-renderer/-/react-test-renderer-16.13.1.tgz#de25ea358d9012606de51e012d9742e7f0deabc1"
