@@ -71,6 +71,12 @@ export const API_STOP_STAKING = 'stop_staking'
 export const API_SHIELDCOINBASE = 'shieldcoinbase'
 export const API_SHIELDCOINBASE_PREFLIGHT = 'shieldcoinbase_preflight'
 export const API_RFOX_CLAIM_BALANCES = 'rfox/claim_account_balances'
+export const API_CREATE_SIMPLE_TOKEN = 'create_simple_token'
+export const API_CREATE_SIMPLE_TOKEN_PREFLIGHT = 'create_simple_token_preflight'
+export const API_LAUNCH_SIMPLE_TOKEN = 'launch_simple_token'
+export const API_LAUNCH_SIMPLE_TOKEN_PREFLIGHT = 'launch_simple_token_preflight'
+export const API_LAUNCH_SIMPLE_TOKEN_DEFINE = 'launch_simple_token_define'
+export const API_LAUNCH_SIMPLE_TOKEN_CALL = 'launch_simple_token_call'
 
 // Non-blockchain API call paths
 export const LOAD_USERS = 'users/load'
@@ -395,6 +401,9 @@ export const SEND_CURRENCY = 'sendcurrency'
 // Create Identity form errors
 export const ERROR_NAME_REQUIRED = 'A name is required'
 export const ERROR_INVALID_Z_ADDR = 'Invalid private address'
+
+//Create Simple Token form errors
+export const ERROR_TOKEN_NAME_REQUIRED = 'A Token name is required'
 
 // Create identity defaults
 export const DEFAULT_REFERRAL_IDS = {

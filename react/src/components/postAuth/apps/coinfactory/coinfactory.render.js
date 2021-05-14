@@ -1,4 +1,5 @@
 import React from 'react';
+import VerusIdStyles from './coinfactory.styles'
 import {
   DASHBOARD,
   CHAIN_FALLBACK_IMAGE,
@@ -7,26 +8,31 @@ import {
   POST_SYNC
 } from "../../../../util/constants/componentConstants";
 import { openAddCoinModal } from '../../../../actions/actionDispatchers';
-import CoinfactoryStyles from './coinfactory.styles'
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 export const CoinfactoryCardRender = function(coinObj) {
-  const { allCurrencies } = this.props
+  const { identities } = this.props
+  const { activeId } = this.state
+  const coinIdentities = identities[coinObj.id] || []
   const errorOrLoading = coinObj.status !== POST_SYNC
-  const numCurrencies = allCurrencies[coinObj.id] ? allCurrencies[coinObj.id].length : '-'
 
   return (
     <div
       className="unstyled-button"
-      style={CoinfactoryStyles.cardClickableContainer}
+      //onClick={() => this.openCoin(coinObj.id)} key={coinObj.id}
+      style={VerusIdStyles.cardClickableContainer}
     >
       <div
         className="d-flex flex-column align-items-end"
-        style={CoinfactoryStyles.cardContainer}
+        style={VerusIdStyles.cardContainer}
       >
         <div
-          className={'card'}
-          style={CoinfactoryStyles.cardInnerContainer}
+          className={`card ${
+            activeId.chainTicker === coinObj.id
+              ? "active-card"
+              : "border-on-hover"
+          }`}
+          style={VerusIdStyles.cardInnerContainer}
         >
           {errorOrLoading && (
             <div
@@ -47,14 +53,14 @@ export const CoinfactoryCardRender = function(coinObj) {
           <div
             className="card-body d-flex justify-content-between"
             style={{
-              ...CoinfactoryStyles.cardBody,
+              ...VerusIdStyles.cardBody,
               paddingTop: errorOrLoading ? 0 : 20,
             }}
           >
             <div style={{ width: "100%" }}>
               <div
                 className="d-flex"
-                style={CoinfactoryStyles.cardCoinInfoContainer}
+                style={VerusIdStyles.cardCoinInfoContainer}
               >
                 <img
                   src={`assets/images/cryptologo/btc/${coinObj.id.toLowerCase()}.png`}
@@ -62,32 +68,61 @@ export const CoinfactoryCardRender = function(coinObj) {
                   height="25px"
                   onError={(e) => {e.target.src = CHAIN_FALLBACK_IMAGE}}
                 />
-                <h4 style={CoinfactoryStyles.cardCoinName}>
+                <h4 style={VerusIdStyles.cardCoinName}>
                   <strong>{coinObj.name}</strong>
                 </h4>
               </div>
+              <select
+                value={
+                  activeId.idIndex != null &&
+                  activeId.chainTicker === coinObj.id
+                    ? JSON.stringify(coinIdentities[activeId.idIndex])
+                    : -1
+                }
+                name="selectedProfileId"
+                className="custom-select custom-select-lg"
+                style={{ marginTop: 10 }}
+                //Selected index is offset by one due to "Select Identity" placeholder
+                onChange={e =>
+                  this.openId(coinObj.id, e.target.selectedIndex - 1)
+                }
+              >
+                <option key={-1} value={-1} disabled={true}>
+                  {"Select identity"}
+                </option>
+                {coinIdentities.map((idObj, index) => {
+                  {
+                    const { identity } = idObj;
+                    return (
+                      <option key={index} value={JSON.stringify(idObj)}>
+                        {`${identity.name}@`}
+                      </option>
+                    );
+                  }
+                })}
+              </select>
               <button
                 className="unstyled-button"
                 onClick={() => this.openSearchModal(coinObj.id)}
-                style={CoinfactoryStyles.cardClickableContainer}
+                style={VerusIdStyles.cardClickableContainer}
+              >
+              <div
+                className="d-flex flex-column align-items-end"
+                style={VerusIdStyles.searchButtonContainer}
               >
                 <div
-                  className="d-flex flex-column align-items-end"
-                  style={CoinfactoryStyles.searchButtonContainer}
+                  className={'card border-on-hover'}
+                  style={VerusIdStyles.cardInnerContainer}
                 >
-                  <div
-                    className={'card border-on-hover'}
-                    style={CoinfactoryStyles.cardInnerContainer}
-                  >
-                    <div style={CoinfactoryStyles.cardInnerTextContainer}>
-                      <i
-                        className={'fas fa-search'}
-                        style={{ paddingRight: 6, color: 'black' }}
-                      />
-                      {`Search ${numCurrencies} ${!isNaN(numCurrencies) && numCurrencies === 1 ? 'Currency' : 'Currencies'}`}
-                    </div>
+                  <div style={VerusIdStyles.cardInnerTextContainer}>
+                    <i
+                      className={'fas fa-search'}
+                      style={{ paddingRight: 6, color: 'black' }}
+                    />
+                    {"ID Search"}
                   </div>
                 </div>
+              </div>
               </button>
             </div>
           </div>

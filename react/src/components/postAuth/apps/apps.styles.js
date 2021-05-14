@@ -25,7 +25,7 @@ export default {
     paddingBottom: 10,
     paddingRight: 0,
     paddingLeft: 0,
-    minWidth: 215
+    minWidth: 195
   },
   mainNavigationTabWithoutText: {
     fontSize: 16,

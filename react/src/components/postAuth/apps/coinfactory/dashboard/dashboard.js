@@ -6,12 +6,19 @@ import {
 } from './dashboard.render';
 import Store from '../../../../../store'
 import {
+  CREATE_IDENTITY,
   CREATE_SIMPLE_TOKEN,
   API_REGISTER_ID_NAME,
   NATIVE,
+  API_REGISTER_ID,
+  ID_POSTFIX,
+  FIX_CHARACTER,
   API_GET_INFO,
+  API_LAUNCH_SIMPLE_TOKEN,
   API_GET_MININGINFO,
   API_GET_CPU_TEMP,
+  API_CREATE_SIMPLE_TOKEN,
+  API_GET_IDENTITIES
 } from "../../../../../util/constants/componentConstants";
 import { conditionallyUpdateWallet, openModal } from '../../../../../actions/actionDispatchers';
 
@@ -24,55 +31,113 @@ class Dashboard extends React.Component {
       coinsStaking: 0,
       tokenname: '',
       tokensupply: '',
-      tokenaddresses: ''
+      tokenaddresses: '',
+      displayNameCommitments: [],
+      compiledIds: [],
+      nameReservationDropdownOpen: false,
+      idRecoveryDropdownOpen: false,
+      verifyDataDropdownOpen: false,
+      signDataDropdownOpen: false,
+      revokeDialogueOpen: false,
+      revokeId: null
     }
 
-    this.updateMineStakeCoins = this.updateMineStakeCoins.bind(this)
+ 
+    this.compileCommits = this.compileCommits.bind(this)
+    this.compileIds = this.compileIds.bind(this)
+    this.openCoinfactorysimpleModal = this.openCoinfactorysimpleModal.bind(this)
+    this.openRegisterIdentityModal = this.openRegisterIdentityModal.bind(this)
+    this.openId = this.openId.bind(this)
   }
 
   componentDidMount() {
-    this.props.nativeCoins.map(coinObj => {
-      conditionallyUpdateWallet(
-        Store.getState(),
-        this.props.dispatch,
-        NATIVE,
-        coinObj.id,
-        API_GET_MININGINFO
+
+    this.compileIds()
+
+    this.compileCommits()
+  }
+
+  openId(chainTicker, idIndex) {
+    this.props.dispatch(
+      setMainNavigationPath(
+        `${getPathParent(
+          this.props.mainPathArray
+        )}/${idIndex}${FIX_CHARACTER}${chainTicker}${FIX_CHARACTER}${ID_POSTFIX}`
       )
+    );
+  }
+
+
+  componentDidUpdate(lastProps) {
+    if (this.props != lastProps) {
+      this.compileIds()
+      this.compileCommits()
+    }
+  }
+
+  compileIds() {
+    const { identities } = this.props
+    let compiledIds = []
+
+    Object.keys(identities).map(chainTicker => {
+      if (identities[chainTicker]) {
+        identities[chainTicker].map((id, index) => {
+          compiledIds.push({...id, chainTicker, index})
+        })
+      }
     })
 
-    this.updateMineStakeCoins()
+    this.setState({ compiledIds })
   }
+
 
   openCoinfactorysimpleModal(chainTicker, commitmentData = null) {
     if(!chainTicker)
-    {toast("Chain not selected from tab menu on left");}
+    toast("Chain not selected from tab menu on left");
     else
-    openModal(CREATE_SIMPLE_TOKEN, { modalType: API_REGISTER_ID_NAME, chainTicker, commitmentData })
-  }
-
-
-
-
-  updateMineStakeCoins() {
-    let coinsStaking = 0, coinsMining = coinsStaking
-    const { miningInfo } = this.props
-    
-    Object.keys(miningInfo).map(chainTicker => {
-      const { numthreads, generate, staking } = miningInfo[chainTicker]
-
-      if (staking) coinsStaking++
-      if (generate && numthreads) coinsMining++
-      
-      this.setState({ coinsMining, coinsStaking })
-    })
-  }
-
-  componentDidUpdate(lastProps) {
-    if (lastProps.miningInfo != this.props.miningInfo) {
-      this.updateMineStakeCoins()
+    {
+      //Open create simple token modal
+      openModal(CREATE_SIMPLE_TOKEN, { modalType: API_CREATE_SIMPLE_TOKEN, chainTicker, commitmentData })
     }
   }
+
+  openRegisterIdentityModal(nameCommitmentObj) {
+    openModal(CREATE_IDENTITY, { modalType: API_REGISTER_ID, chainTicker: nameCommitmentObj.chainTicker, nameCommitmentObj })
+  }
+
+  openLaunchSimpleTokenModal(nameCommitmentObj) {
+      openModal(CREATE_SIMPLE_TOKEN, { modalType: API_LAUNCH_SIMPLE_TOKEN, chainTicker: nameCommitmentObj.chainTicker, nameCommitmentObj })
+  }
+
+
+
+  compileCommits() {
+    const { nameCommitments, transactions } = this.props
+    let compiledCommits = []
+
+    Object.keys(nameCommitments).map(chainTicker => {
+      if (nameCommitments[chainTicker]) {
+        nameCommitments[chainTicker].map(nameCommit => {
+          let confirmations = null
+
+          if (transactions[chainTicker]) {
+            transactions[chainTicker].map(tx => {
+              if (tx.txid === nameCommit.txid) {
+                confirmations = tx.confirmations
+              }
+            })
+          }
+
+          compiledCommits.push({...nameCommit, chainTicker, confirmations})
+        })
+      }
+    })
+
+    this.setState({ displayNameCommitments: compiledCommits })
+  }
+
+
+
 
   render() {
     return DashboardRender.call(this);
@@ -92,6 +157,12 @@ function mapStateToPropsFactory(initialState, ownProps) {
       cpuData: state.system.static ? state.system.static.cpu : {},
       cpuTempError: state.errors[API_GET_CPU_TEMP],
       getInfoErrors: state.errors[API_GET_INFO],
+      nameCommitments: state.ledger.nameCommitments,
+      transactions: state.ledger.transactions,
+      mainPathArray: state.navigation.mainPathArray,
+      activatedCoins: state.coins.activatedCoins,
+      identityErrors: state.errors[API_GET_IDENTITIES],
+      activeUser: state.users.activeUser
     };
   };
 }

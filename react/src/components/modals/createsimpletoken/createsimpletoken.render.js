@@ -1,8 +1,10 @@
 import React from 'react';
 import CommitNameForm from "../createIdentity/commitNameForm/commitNameForm";
+import SimpleTokenForm from "../createsimpletoken/simpleTokenForm/simpleTokenForm";
+import LaunchSimpleTokenForm from "../createsimpletoken/launchSimpleToken/launchSimpleTokenForm";
 import RegisterIdentityForm from "../createIdentity/registerIdentityForm/registerIdentityForm";
 import RecoverIdentityForm from "../createIdentity/recoverIdentityForm/recoverIdentityForm";
-import { CONFIRM_DATA, API_SUCCESS, SEND_RESULT, API_REGISTER_ID_NAME, API_RECOVER_ID, API_REGISTER_ID, API_UPDATE_ID } from '../../../util/constants/componentConstants';
+import { CONFIRM_DATA, API_SUCCESS, SEND_RESULT, API_REGISTER_ID_NAME, API_RECOVER_ID, API_REGISTER_ID, API_UPDATE_ID, API_CREATE_SIMPLE_TOKEN, API_LAUNCH_SIMPLE_TOKEN } from '../../../util/constants/componentConstants';
 import Button from '@material-ui/core/Button';
 import SimpleLoader from '../../../containers/SimpleLoader/SimpleLoader'
 import UpdateIdentityForm from '../createIdentity/updateIdentityForm/updateIdentityForm';
@@ -16,7 +18,7 @@ export const CreateSimpleTokenRender = function() {
     <div style={{ width: "100%", paddingLeft: 35, paddingRight: 35 }}>
       {loading
         ? CreateIdentityRenderLoading.call(this)
-        : CreateIdentityFormRender.call(this)}
+        : CreateSimpleTokenFormRender.call(this)}
       {!loading && (
         <div
           style={{
@@ -55,7 +57,7 @@ export const CreateSimpleTokenRender = function() {
   );
 }
 
-export const CreateIdentityFormRender = function() {
+export const CreateSimpleTokenFormRender = function() {
   const { state, props, getFormData, getContinueDisabled } = this;
   const { modalProps } = props;
 
@@ -89,6 +91,24 @@ export const CreateIdentityFormRender = function() {
   } else if (modalProps.modalType === API_UPDATE_ID) {
     return (
       <UpdateIdentityForm 
+        {...modalProps}
+        {...state}
+        setFormData={getFormData}
+        setContinueDisabled={getContinueDisabled}
+      />
+    )
+  } else if (modalProps.modalType === API_CREATE_SIMPLE_TOKEN) {
+    return (
+      <SimpleTokenForm 
+        {...modalProps}
+        {...state}
+        setFormData={getFormData}
+        setContinueDisabled={getContinueDisabled}
+      />
+    )
+  } else if (modalProps.modalType === API_LAUNCH_SIMPLE_TOKEN) {
+    return (
+      <LaunchSimpleTokenForm 
         {...modalProps}
         {...state}
         setFormData={getFormData}

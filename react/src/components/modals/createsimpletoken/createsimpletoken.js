@@ -22,9 +22,11 @@ import {
   API_RECOVER_ID,
   API_REGISTER_ID,
   DEFAULT_REFERRAL_IDS,
-  API_UPDATE_ID
+  API_UPDATE_ID,
+  API_CREATE_SIMPLE_TOKEN,
+  API_LAUNCH_SIMPLE_TOKEN
 } from "../../../util/constants/componentConstants";
-import { registerIdName, registerId, recoverId, updateId } from '../../../util/api/wallet/walletCalls';
+import { registerIdName, registerIdNameForSimpleToken, registerId, recoverId, updateId, launchSimpleToken } from '../../../util/api/wallet/walletCalls';
 import { newSnackbar, expireData } from '../../../actions/actionCreators';
 import { conditionallyUpdateWallet } from '../../../actions/actionDispatchers';
 import Store from '../../../store'
@@ -36,6 +38,12 @@ class CreateSimpleToken extends React.Component {
     const { name } = activeCoin
 
     switch (props.modalProps.modalType) {
+      case API_CREATE_SIMPLE_TOKEN:
+        props.setModalHeader(`Create Simple token on ${name} Blockchain`)
+        break;
+      case API_LAUNCH_SIMPLE_TOKEN:
+          props.setModalHeader(`Launch Simple Token on ${name} Blockchain called ${props.modalProps.nameCommitmentObj.namereservation.name}`)
+          break;
       case API_REGISTER_ID:
         props.setModalHeader(`Create ${name} ID for ${props.modalProps.nameCommitmentObj.namereservation.name}@`)
         break;
@@ -113,7 +121,9 @@ class CreateSimpleToken extends React.Component {
           revocationAuthority,
           recoveryAuthority,
           privateAddress,
-          primaryAddress
+          primaryAddress,
+          simple_addresses,
+          amount
         } = formData;
 
         const _privateAddress =
@@ -131,6 +141,34 @@ class CreateSimpleToken extends React.Component {
               : primaryAddress,
             this.selectReferralIdentity(referralId)
           );
+        } else if (modalProps.modalType === API_CREATE_SIMPLE_TOKEN) {
+            _txData = await registerIdNameForSimpleToken(
+              !formStep,
+              chainTicker,
+              name,
+              (primaryAddress == null || primaryAddress.length === 0)
+                ? null
+                : primaryAddress,
+              this.selectReferralIdentity(referralId),
+              simple_addresses,
+              amount
+            );
+        } else if (modalProps.modalType === API_LAUNCH_SIMPLE_TOKEN) {
+            _txData = await launchSimpleToken(
+              !formStep,
+              chainTicker,
+              name,
+              txid,
+              salt,
+              [controlAddress], //primaryAddresses,
+              1,                // minimumSignatures,
+              {},               // contentmap,
+              revocationAuthority,
+              recoveryAuthority,
+              _privateAddress,
+              null,
+              this.selectReferralIdentity(referralId)
+            );        
         } else if (modalProps.modalType === API_REGISTER_ID) {
           _txData = await registerId(
             !formStep,
@@ -192,6 +230,13 @@ class CreateSimpleToken extends React.Component {
                     `ID transaction posted with txid ${_txData.result.resulttxid}, please wait for ID to get confirmed.`
                   )
                 );
+              } else if (modalProps.modalType === API_CREATE_SIMPLE_TOKEN) {
+                this.props.dispatch(
+                  newSnackbar(
+                    INFO_SNACK,
+                    `Token ID Name committed. Please wait a few minutes for it to get confirmed, and then create your ID!`
+                  )
+                );
               } else if (modalProps.modalType === API_RECOVER_ID) {
                 this.props.dispatch(
                   newSnackbar(
@@ -213,6 +258,8 @@ class CreateSimpleToken extends React.Component {
               this.props.dispatch(expireData(this.props.activeCoin.id, API_GET_BALANCES))
               this.props.dispatch(expireData(this.props.activeCoin.id, API_GET_NAME_COMMITMENTS))
               this.props.dispatch(expireData(this.props.activeCoin.id, API_GET_IDENTITIES))
+              this.props.dispatch(expireData(this.props.activeCoin.id, API_LAUNCH_SIMPLE_TOKEN))
+              this.props.dispatch(expireData(this.props.activeCoin.id, API_CREATE_SIMPLE_TOKEN))
               conditionallyUpdateWallet(Store.getState(), this.props.dispatch, NATIVE, this.props.activeCoin.id, API_GET_TRANSACTIONS)
               conditionallyUpdateWallet(Store.getState(), this.props.dispatch, NATIVE, this.props.activeCoin.id, API_GET_NAME_COMMITMENTS)
             }
@@ -222,6 +269,8 @@ class CreateSimpleToken extends React.Component {
         } else {
           if (modalProps.modalType === API_REGISTER_ID_NAME) {
             this.props.dispatch(newSnackbar(ERROR_SNACK, "Error commiting name."))
+          } else if (modalProps.modalType === API_REGISTER_ID) {
+            this.props.dispatch(newSnackbar(ERROR_SNACK, "Error creating ID."))
           } else if (modalProps.modalType === API_REGISTER_ID) {
             this.props.dispatch(newSnackbar(ERROR_SNACK, "Error creating ID."))
           } else if (modalProps.modalType === API_RECOVER_ID) {

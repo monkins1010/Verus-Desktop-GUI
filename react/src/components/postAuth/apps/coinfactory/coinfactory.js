@@ -2,271 +2,316 @@ import React from 'react';
 import { connect } from 'react-redux';
 import {
   DASHBOARD,
+  IS_VERUS,
+  ID_POSTFIX,
   NATIVE,
-  MINING_POSTFIX,
-  MS_MERGE_MINING_STAKING,
-  MS_MINING_STAKING,
-  MS_MINING,
-  MS_STAKING,
-  MS_MERGE_MINING,
-  MS_OFF,
-  MS_IDLE,
   ERROR_SNACK,
+  SUCCESS_SNACK,
   MID_LENGTH_ALERT,
-  API_GET_MININGINFO,
-  MINING_FUNCTIONS,
-  API_ERROR,
   FIX_CHARACTER,
   CREATE_SIMPLE_TOKEN
 } from "../../../../util/constants/componentConstants";
 import Dashboard from './dashboard/dashboard'
-import MiningWallet from './miningWallet/miningWallet'
 import {
-  CoinfactoryTabsRender
+  CoinfactoryTabsRender,
+  CoinfactoryCardRender
 } from './coinfactory.render'
-import Store from '../../../../store'
-import {
-  setMainNavigationPath,
-  expireData,
-  newSnackbar,
-  startLoadingMiningFunctions,
-  finishLoadingMiningFunctions,
-} from "../../../../actions/actionCreators";
+import { setMainNavigationPath, newSnackbar } from '../../../../actions/actionCreators'
 import { getPathParent, getLastLocation } from '../../../../util/navigationUtils'
-import { stopStaking, startStaking, stopMining, startMining } from '../../../../util/api/wallet/walletCalls';
-import { conditionallyUpdateWallet } from '../../../../actions/actionDispatchers';
+import FormDialog from '../../../../containers/FormDialog/FormDialog'
+import { getIdentity } from '../../../../util/api/wallet/walletCalls'
+import { openIdentityCard } from '../../../../actions/actionDispatchers';
 import { useStringAsKey } from '../../../../util/objectUtil';
+import CoinWallet from '../wallet/coinWallet/coinWallet';
+
+const COMPONENT_MAP = {
+  [DASHBOARD]: <Dashboard />,
+}
 
 class Coinfactory extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      nativeCoins: [],
-      miningStates: {}
-    }
-
-    this.miningStateDescs = {
-      [MS_IDLE]: "Loading...",
-      [MS_OFF]: "Mining/Staking Off",
-      [MS_STAKING]: "Staking",
-      [MS_MINING]: "Mining",
-      [MS_MINING_STAKING]: "Mining & Staking",
-      [MS_MERGE_MINING]: "Merge Mining",
-      [MS_MERGE_MINING_STAKING]: "Merge Mining & Staking"
+      activeId: {
+        chainTicker: null,
+        idIndex: null,
+        idSearchOpen: false,
+        idSearchTerm: '',
+        loading: false,
+        searchChain: null
+      }
     }
     
     this.setCards = this.setCards.bind(this)
     this.setTabs = this.setTabs.bind(this)
+    this.openId = this.openId.bind(this)
     this.openDashboard = this.openDashboard.bind(this)
-    this.getNativeCoins = this.getNativeCoins.bind(this)
-    this.openCoin = this.openCoin.bind(this)
-    this.handleThreadChange = this.handleThreadChange.bind(this)
-    this.toggleStaking = this.toggleStaking.bind(this)
+    this.updateSearchTerm = this.updateSearchTerm.bind(this)
+    this.closeSearchModal = this.closeSearchModal.bind(this)
+    this.openSearchModal = this.openSearchModal.bind(this)
+    this.onIdSearchSubmit = this.onIdSearchSubmit.bind(this)
+    this.getIdentityTransactions = this.getIdentityTransactions.bind(this)
     this.setTabs()
   }
 
   componentDidMount() {
+    //Set default navigation path to dashboard if wallet is opened without a sub-navigation location
+    //if (!this.props.mainPathArray[3]) this.props.dispatch(setMainNavigationPath(`${this.props.mainPathArray.join('/')}/${DASHBOARD}`)) 
+
     if (!this.props.mainPathArray[3]) {
-      this.getNativeCoins(this.props.activatedCoins, () => {
-        const lastLocation = getLastLocation(
-          useStringAsKey(
-            this.props.mainTraversalHistory,
-            this.props.mainPathArray.join(".")
+      const chainTickers = Object.keys(this.props.identities)
+      const lastLocation = getLastLocation(
+        useStringAsKey(
+          this.props.mainTraversalHistory,
+          this.props.mainPathArray.join(".")
+        )
+      );
+
+      if (
+        lastLocation != null &&
+        lastLocation.length > 0 &&
+        lastLocation[0].includes(`${FIX_CHARACTER}${ID_POSTFIX}`)
+      ) {
+        const lastLocationData = lastLocation[0].split(FIX_CHARACTER);
+        const coinId = lastLocationData[1];
+        const identityIndex = lastLocationData[0];
+
+        this.props.dispatch(
+          setMainNavigationPath(
+            `${this.props.mainPathArray.join("/")}/${
+              chainTickers.includes(coinId) &&
+              this.props.identities[coinId].length > identityIndex
+                ? lastLocation[0]
+                : DASHBOARD
+            }`
           )
         );
-  
-        const lastCoin =
-          lastLocation != null &&
-          lastLocation.length > 0 &&
-          lastLocation[0].includes(`${FIX_CHARACTER}${MINING_POSTFIX}`)
-            ? lastLocation[0].split(FIX_CHARACTER)[0]
-            : null;
-  
-        this.props.dispatch(setMainNavigationPath(`${this.props.mainPathArray.join('/')}/${
-          lastCoin != null && this.state.nativeCoins.includes(lastCoin) ? lastLocation[0] : DASHBOARD
-        }`)) 
+      } else
+        this.props.dispatch(
+          setMainNavigationPath(
+            `${this.props.mainPathArray.join("/")}/${DASHBOARD}`
+          )
+        );
+    } 
+  }
+
+  updateSearchTerm(term) {
+    this.setState({ idSearchTerm: term })
+  }
+
+  closeSearchModal() {
+    this.setState({ idSearchOpen: false })
+  }
+
+  openSearchModal(chain) {
+    this.setState({ idSearchOpen: true, searchChain: chain })
+  }
+
+  onIdSearchSubmit() {
+    this.setState({loading: true}, () => {
+      getIdentity(NATIVE, this.state.searchChain, this.state.idSearchTerm)
+      .then(res => {
+        if (res.msg === 'success') {
+          this.props.dispatch(newSnackbar(SUCCESS_SNACK, `${this.state.idSearchTerm} ID found!`, MID_LENGTH_ALERT))
+          openIdentityCard(res.result, this.state.searchChain)
+          this.setState({ loading: false, idSearchOpen: false, idSearchTerm: '' })
+        } else {
+          this.props.dispatch(newSnackbar(ERROR_SNACK, res.result))
+          this.setState({ loading: false })
+        }
       })
-    }
-    
-   
-  }
-
-  async toggleStaking(chainTicker) {
-    const { miningInfo, dispatch } = this.props
-
-    if (miningInfo[chainTicker]) {
-      try {
-        this.props.dispatch(startLoadingMiningFunctions(chainTicker))
-        
-        // Try to dispatch call to stop or start staking
-        if (miningInfo[chainTicker].staking) {
-          await stopStaking(NATIVE, chainTicker)
-        } else {
-          await startStaking(NATIVE, chainTicker)
-        }
-
-        // If successful, expire mining data and update all other expired data
-        dispatch(expireData(chainTicker, API_GET_MININGINFO))
-        if (
-          (await conditionallyUpdateWallet(
-            Store.getState(),
-            dispatch,
-            NATIVE,
-            chainTicker,
-            API_GET_MININGINFO
-          )) === API_ERROR
-        ) {
-          throw new Error("Failed to update mining status.")
-        } else this.props.dispatch(finishLoadingMiningFunctions(chainTicker))
-
-      } catch (e) {
-        // If failed, cancel loading
-        this.props.dispatch(finishLoadingMiningFunctions(chainTicker))
-        dispatch(newSnackbar(ERROR_SNACK, e.message, MID_LENGTH_ALERT))
-      }
-    }
-  }
-
-  // Dispatch call to stop or start mining, then expire and update mining data
-  async handleThreadChange(event, chainTicker) {
-    const newThreads = event.target.value
-    const { dispatch, miningInfo } = this.props
-
-    if (
-      miningInfo[chainTicker] &&
-      (newThreads !== miningInfo[chainTicker].numthreads || 
-      (!miningInfo[chainTicker].generate && newThreads > 0))
-    ) {
-      try {
-        this.props.dispatch(startLoadingMiningFunctions(chainTicker));
-
-        // Try to dispatch call to stop or start mining
-        if (newThreads === 0) {
-          await stopMining(NATIVE, chainTicker);
-        } else {
-          await startMining(NATIVE, chainTicker, newThreads);
-        }
-
-        // If successful, expire mining data and update all other expired data
-        dispatch(expireData(chainTicker, API_GET_MININGINFO));
-        if (
-          (await conditionallyUpdateWallet(
-            Store.getState(),
-            dispatch,
-            NATIVE,
-            chainTicker,
-            API_GET_MININGINFO
-          )) === API_ERROR
-        ) {
-          throw new Error("Failed to update mining status.");
-        } else this.props.dispatch(finishLoadingMiningFunctions(chainTicker));
-      } catch (e) {
-        // If failed, cancel loading
-        this.props.dispatch(finishLoadingMiningFunctions(chainTicker));
-        dispatch(newSnackbar(ERROR_SNACK, e.message, MID_LENGTH_ALERT));
-      }
-    }
-  }
-
-
-  // Calculates the native coins given the current activated coins
-  // and activates the callback function once the state has been changed
-  getNativeCoins(activatedCoins, cb) {
-    this.setState({ nativeCoins: Object.keys(activatedCoins).filter((chainTicker) => {
-      return activatedCoins[chainTicker].mode === NATIVE
-    })}, () => cb())
-  }
-
-  /**
-   * Sets the mining coin cards by mapping over the provided coins activated in native mode
-   * @param {Object} activatedCoins 
-   */
-  setCards(activatedCoins) {
-    this.getNativeCoins(activatedCoins, () => {
-      this.props.setCards(this.state.nativeCoins.map((chainTicker) => {
-        return null
-      }))
+      .catch(err => {
+        this.props.dispatch(newSnackbar(ERROR_SNACK, err.message))
+        this.setState({ loading: false })
+      })
     })
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (
+      Object.keys(nextProps.activatedCoins).length <
+        Object.keys(this.props.activatedCoins).length ||
+      nextProps.mainPathArray != this.props.mainPathArray
+    ) {
+      this.setCards(nextProps.activatedCoins);
+    }
+  }
+  
+  componentDidUpdate(lastProps) {
+    if (lastProps != this.props) {
+      this.setCards(this.props.activatedCoins)
+    }
+  }
 
+  /**
+   * Sets the wallet coin cards by mapping over the provided identity compatible coins
+   * @param {Object} activatedCoins 
+   */
+  setCards(activatedCoins) {
+    const { setCards, mainPathArray, identities } = this.props
+    const walletApp = mainPathArray[3] ? mainPathArray[3] : null
+    
+    const updateCards = () => {
+      const verusProtocolCoins = Object.values(activatedCoins).filter((coinObj) => {
+        return (coinObj.options.tags.includes(IS_VERUS) && coinObj.mode === NATIVE)
+      })
+  
+      setCards(verusProtocolCoins.map((coinObj) => {
+        return CoinfactoryCardRender.call(this, coinObj)
+      }))
+    }
+
+    if (walletApp) {
+      const pathDestination = walletApp.split(FIX_CHARACTER) 
+      let activeId = {chainTicker: null, idIndex: null}
+
+      if (pathDestination.length > 2 && pathDestination[2] === ID_POSTFIX) {
+        const idIndex = pathDestination[0]
+        const chainTicker = pathDestination[1]
+
+        if (identities[chainTicker] != null && identities[chainTicker][idIndex] != null) {
+          activeId = { chainTicker, idIndex }
+        } 
+      } 
+
+      this.setState({ activeId }, updateCards)
+    } else updateCards()
+  }
+
+  openId(chainTicker, idIndex) {
+    this.props.dispatch(
+      setMainNavigationPath(
+        `${getPathParent(
+          this.props.mainPathArray
+        )}/${idIndex}${FIX_CHARACTER}${chainTicker}${FIX_CHARACTER}${ID_POSTFIX}`
+      )
+    );
+  }
 
   openDashboard() {
-    this.props.dispatch(setMainNavigationPath(`${getPathParent(this.props.mainPathArray)}/${DASHBOARD}`))
+    this.setState({
+      activeId: {
+        chainTicker: null,
+        idIndex: null
+      }
+    }, () => {
+      this.props.dispatch(setMainNavigationPath(`${getPathParent(this.props.mainPathArray)}/${DASHBOARD}`))
+    })
   }
 
   setTabs() {
     this.props.setTabs(CoinfactoryTabsRender.call(this))
   }
 
-  openCoin(wallet) {
-    this.props.dispatch(
-      setMainNavigationPath(
-        `${getPathParent(
-          this.props.mainPathArray
-        )}/${wallet}${FIX_CHARACTER}${MINING_POSTFIX}`
-      )
-    );
+  getIdentityTransactions(transactions, identity) {
+    if (!identity || !transactions) return [];
+    let txIndexes = []
+
+    const pubAddrs = identity.addresses.public.map(addrObj => addrObj.address);
+    const privAddrs = identity.addresses.private.map(addrObj => addrObj.address);
+
+    return transactions.filter((tx, index) => {
+      if (tx.address != null && (pubAddrs.includes(tx.address) || privAddrs.includes(tx.address))) {
+        txIndexes.push(index)
+        return true
+      } else return false
+    }).map((tx, index) => {return {...tx, txIndex: txIndexes[index]}});
   }
 
   render() {
+    const { activeId } = this.state
     const walletApp = this.props.mainPathArray[3] ? this.props.mainPathArray[3] : null
+    let component = null
 
     if (walletApp) {
-      if (walletApp === DASHBOARD)
-        return (
-          <Dashboard
-            miningStates={this.state.miningStates}
-            nativeCoins={this.state.nativeCoins}
-            miningStateDescs={this.miningStateDescs}
-            openCoin={this.openCoin}
-            handleThreadChange={this.handleThreadChange}
-            toggleStaking={this.toggleStaking}
-            loadingCoins={this.props.loading}
-            miningInfo={this.props.miningInfo}
-            miningInfoErrors={this.props.miningInfoErrors}
-          />
-        );
+      if (COMPONENT_MAP[walletApp]) component = COMPONENT_MAP[walletApp]
       else {
-        const pathDestination = walletApp.split(FIX_CHARACTER);
-
-        if (pathDestination.length > 1 && pathDestination[1] === MINING_POSTFIX)
-          return (
-            <MiningWallet
-              miningState={
-                this.state.miningStates[pathDestination[0]] == null
-                  ? MS_IDLE
-                  : this.state.miningStates[pathDestination[0]]
+        if (activeId.idIndex != null && activeId.chainTicker != null) {
+          const activeIdentity = this.props.identities[activeId.chainTicker]
+            ? this.props.identities[activeId.chainTicker][activeId.idIndex]
+            : null;
+          
+          if (activeIdentity) {
+            for (const currency in activeIdentity.balances.reserve) {
+              if (
+                activeIdentity.balances.reserve[currency] != null &&
+                !isNaN(activeIdentity.balances.reserve[currency])
+              ) {
+                activeIdentity.balances.reserve[currency] = {
+                  public: {
+                    confirmed: activeIdentity.balances.reserve[currency],
+                  },
+                  private: {},
+                };
               }
-              coin={pathDestination[0]}
-              loading={this.props.loading[pathDestination[0]]}
-              handleThreadChange={this.handleThreadChange}
-              toggleStaking={this.toggleStaking}
-              miningInfo={this.props.miningInfo[pathDestination[0]]}
-              miningInfoErrors={this.props.miningInfoErrors[pathDestination[0]]}
+            }
+          }
+
+          if (activeIdentity.addresses.private.length > 0) {
+            activeIdentity.balances.native.private.confirmed = 0
+
+            for (let i = 0; i < activeIdentity.addresses.private.length; i++) {
+              const privAddr =
+                this.props.addresses[activeId.chainTicker] == null
+                  ? null
+                  : this.props.addresses[activeId.chainTicker].private.find(
+                      (x) =>
+                        x.address ===
+                        activeIdentity.addresses.private[i].address
+                    );
+
+              if (privAddr) {
+                activeIdentity.addresses.private[i].balances.native = privAddr.balances.native
+
+                activeIdentity.balances.native.private.confirmed += activeIdentity
+                  .addresses.private[i].balances.native
+              }
+            }
+          }
+
+          component = (
+            <CoinWallet
+              coin={activeId.chainTicker}
+              balances={activeIdentity.balances}
+              addresses={activeIdentity.addresses}
+              transactions={this.getIdentityTransactions(this.props.transactions[activeId.chainTicker], activeIdentity)}
+              activeIdentity={activeIdentity}
             />
           );
+        }
       }
     }
 
-    return null
+    return (
+      <React.Fragment>
+        <FormDialog
+          open={this.state.idSearchOpen}
+          title={`Search ${this.state.searchChain} IDs`}
+          value={this.state.idSearchTerm}
+          onChange={this.updateSearchTerm}
+          onCancel={this.closeSearchModal}
+          onSubmit={this.onIdSearchSubmit}
+          disabled={this.state.loading}
+        />
+        { component }
+      </React.Fragment>
+    );
   }
 }
 
 const mapStateToProps = (state) => {
-  const { chainTicker } = state.modal[CREATE_SIMPLE_TOKEN]
   return {
     mainPathArray: state.navigation.mainPathArray,
     activatedCoins: state.coins.activatedCoins,
-    miningInfo: state.ledger.miningInfo,
-    miningInfoErrors: state.errors[API_GET_MININGINFO],
-    loading: state.loading[MINING_FUNCTIONS],
-    mainTraversalHistory: state.navigation.mainTraversalHistory,
-    activeCoin: state.coins.activatedCoins[chainTicker],
-    balances: state.ledger.balances[chainTicker],
-    addresses: state.ledger.addresses[chainTicker],
-    modalProps: state.modal[CREATE_SIMPLE_TOKEN]
+    fiatPrices: state.ledger.fiatPrices,
+    fiatCurrency: state.settings.config.general.main.fiatCurrency,
+    identities: state.ledger.identities,
+    nameCommitments: state.ledger.nameCommitments,
+    activeUser: state.users.activeUser,
+    transactions: state.ledger.transactions,
+    addresses: state.ledger.addresses,
+    mainTraversalHistory: state.navigation.mainTraversalHistory
   };
 };
 
