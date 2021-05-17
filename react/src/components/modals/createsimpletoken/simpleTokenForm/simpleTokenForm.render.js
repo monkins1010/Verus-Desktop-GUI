@@ -98,7 +98,7 @@ export const SimpleTokenEnterRender = function() {
       <TextField
         error={formErrors.simple_addresses.length > 0}
         helperText={formErrors.simple_addresses ? formErrors.simple_addresses[0] : null}
-        label="Enter comma seperated list of addresses to recieve tokens"
+        label="Enter address to recieve tokens"
         variant="outlined"
         onChange={updateInput}
         name="simple_addresses"

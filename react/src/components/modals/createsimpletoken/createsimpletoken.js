@@ -158,16 +158,8 @@ class CreateSimpleToken extends React.Component {
               !formStep,
               chainTicker,
               name,
-              txid,
-              salt,
-              [controlAddress], //primaryAddresses,
-              1,                // minimumSignatures,
-              {},               // contentmap,
-              revocationAuthority,
-              recoveryAuthority,
-              _privateAddress,
-              null,
-              this.selectReferralIdentity(referralId)
+              simple_addresses,
+              amount  
             );        
         } else if (modalProps.modalType === API_REGISTER_ID) {
           _txData = await registerId(
@@ -237,6 +229,13 @@ class CreateSimpleToken extends React.Component {
                     `Token ID Name committed. Please wait a few minutes for it to get confirmed, and then create your ID!`
                   )
                 );
+              } else if (modalProps.modalType === API_LAUNCH_SIMPLE_TOKEN) {
+                this.props.dispatch(
+                  newSnackbar(
+                    INFO_SNACK,
+                    `Token Launching. Please wait a few minutes for Token to launch!`
+                  )
+                );
               } else if (modalProps.modalType === API_RECOVER_ID) {
                 this.props.dispatch(
                   newSnackbar(
@@ -271,8 +270,10 @@ class CreateSimpleToken extends React.Component {
             this.props.dispatch(newSnackbar(ERROR_SNACK, "Error commiting name."))
           } else if (modalProps.modalType === API_REGISTER_ID) {
             this.props.dispatch(newSnackbar(ERROR_SNACK, "Error creating ID."))
-          } else if (modalProps.modalType === API_REGISTER_ID) {
-            this.props.dispatch(newSnackbar(ERROR_SNACK, "Error creating ID."))
+          } else if (modalProps.modalType === API_CREATE_SIMPLE_TOKEN) {
+            this.props.dispatch(newSnackbar(ERROR_SNACK, "Error creating Token."))
+          } else if (modalProps.modalType === API_LAUNCH_SIMPLE_TOKEN) {
+            this.props.dispatch(newSnackbar(ERROR_SNACK, "Error Launching Token."))
           } else if (modalProps.modalType === API_RECOVER_ID) {
             this.props.dispatch(newSnackbar(ERROR_SNACK, "Error recovering ID."))
           } else if (modalProps.modalType === API_UPDATE_ID) {

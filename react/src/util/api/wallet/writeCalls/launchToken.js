@@ -4,7 +4,7 @@ import {
   API_CREATE_SIMPLE_TOKEN_PREFLIGHT,
   NATIVE,
   API_LAUNCH_SIMPLE_TOKEN_PREFLIGHT,
-  API_LAUNCH_SIMPLE_TOKEN_CALL
+  API_LAUNCH_SIMPLE_TOKEN
 } from "../../../constants/componentConstants";
 
 export const registerIdNameForSimpleToken = async (
@@ -47,48 +47,31 @@ export const registerIdNameForSimpleToken = async (
 
 
 
-/**
- * Creates a name commitment for a Verus ID for use with the launch token
- * @param {String} preflight Whether or not to actually register the ID name or just return data to confirm
- * @param {String} chainTicker The chain to create the name commitment on
- * @param {String} name The name to create a commitment for 
- * @param {String} referralId The refferal id that can be used for a creation discount
- */
-export const launchSimpleToken = async (
+
+  export const launchSimpleToken = async (
     preflight,
     chainTicker,
     name,
-    txid,
-    salt,
-    primaryaddresses,
-    minimumsignatures,
-    contentmap,
-    revocationauthority,
-    recoveryauthority,
-    privateaddress,
-    idFee,
-    referral
+    simple_addresses,
+    amount
   ) => {
     try {
+  
+    //  var options = 96; // token paramter to launch simple token
       return await getApiData(
         NATIVE,
-        preflight ? API_LAUNCH_SIMPLE_TOKEN_PREFLIGHT : API_LAUNCH_SIMPLE_TOKEN_CALL,
+        preflight ? API_LAUNCH_SIMPLE_TOKEN_PREFLIGHT : API_LAUNCH_SIMPLE_TOKEN,
         {
           chainTicker,
           name,
-          txid,
-          salt,
-          primaryaddresses,
-          minimumsignatures,
-          contentmap,
-          revocationauthority,
-          recoveryauthority,
-          privateaddress,
-          idFee,
-          referral
-        }
+          simple_addresses,
+          amount,
+          delocalize: true
+        } 
       );
     } catch (e) {
       throw e
     }
   };
+  
+
