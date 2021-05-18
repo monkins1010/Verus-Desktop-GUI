@@ -49,6 +49,9 @@ export const UpdateIdentityFormEnterRender = function() {
 
   return (
     <React.Fragment>
+        <p>
+          <b>Step 3:</b> Launch the token to the specified address, note this costs 200.0004 VRSC.  
+       </p>
      
       <TextField
         label="Name of Token"

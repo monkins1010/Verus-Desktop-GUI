@@ -17,18 +17,9 @@ import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import { secondsToTime } from "../../../../../util/displayUtil/timeUtils";
 import { normalizeNum } from "../../../../../util/displayUtil/numberFormat";
 import Tooltip from '@material-ui/core/Tooltip';
-import InfoIcon from '@material-ui/icons/Info';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import MoneyOffIcon from '@material-ui/icons/MoneyOff';
-import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 import IconButton from '@material-ui/core/IconButton';
 import WalletPaper from "../../../../../containers/WalletPaper/WalletPaper";
-import { openAddCoinModal } from "../../../../../actions/actionDispatchers";
-import FormDialog from  "../../../../../containers/FormDialog/FormDialog";
-import TextField from '@material-ui/core/TextField';
+import SimpleLoader from "../../../../../containers/SimpleLoader/SimpleLoader";
 
 
 import DeleteForever from '@material-ui/icons/DeleteForever';
@@ -54,9 +45,9 @@ export const DashboardRender = function() {
           className="card-title"
           style={{ fontSize: 16, margin: 0, width: "100%" }}
         >
-          {"Create your own Token"}
+          {"Create your own Coin, Token or Blockchain"}
         </h6>
-      <div style={{ display: "flex", flexWrap: "wrap", marginTop: 10 }}>
+      <div style={{ display: "flex", alignItems: "center",padding: 4, flexWrap: "wrap", marginTop: 10 }}>
       <button
         className="btn btn-primary"
         type="button"
@@ -64,16 +55,44 @@ export const DashboardRender = function() {
           fontSize: 14,
           backgroundColor: "rgb(49, 101, 212)",
           borderWidth: 1,
-          borderColor: "rgb(49, 101, 212)"
+          borderColor: "rgb(49, 101, 212)",
+          width : '152px'
         }}
         onClick={ () => this.openCoinfactorysimpleModal(identityChains[0])
         }
        >
         {"Create Simple Token"}
       </button>
-     
+              <a  style={{ marginLeft: "5px"}}>
+                                 
+                    {"Create a simple non fractionally backed token"}
+                                 
+              </a>
+
         </div>
-     { this.state.displayNameCommitments.length > 0 ? DashboardRenderTable.call(this) : null  }
+        <div style={{ display: "flex", alignItems: "center",padding: 4, flexWrap: "wrap", marginTop: 10 }}>
+      <button
+        className="btn btn-primary"
+        type="button"
+        style={{
+          fontSize: 14,
+          backgroundColor: "rgb(49, 101, 212)",
+          borderWidth: 1,
+          borderColor: "rgb(49, 101, 212)",
+          width : '152px'
+        }}
+        
+       >
+        {"Create Kickstarter"}
+      </button>
+              <a  style={{ marginLeft: "5px"}}>
+                                 
+                    {"Create a kickstarter campaign to fund your project"}
+                                 
+              </a>
+              
+        </div>
+     { this.state.displayNameCommitments.length > 0 ? DashboardRenderTable.call(this) : <SimpleLoader size={75} text={"Loading Blockchain..."}/> }
       </WalletPaper>
 
     </div>
@@ -82,10 +101,15 @@ export const DashboardRender = function() {
 
 export const DashboardRenderTable = function() {
   return (
-    <div className="table-responsive" style={{ maxHeight: 600, overflowY: "scroll" }}>
+    <div className="table-responsive" style={{ maxHeight: 600, overflowY: "scroll",marginTop: 10 }}>
       <table className="table table-striped">
         <thead>
-          <tr />
+        <tr>
+          <th scope="col">Identity</th>
+          <th scope="col">Project status</th>
+          <th scope="col">Action</th>
+          <th scope="col">Delete?</th>
+        </tr>
         </thead>
         <tbody>
           {this.state.displayNameCommitments.map((reservationObj, index) => {
@@ -130,9 +154,7 @@ export const DashboardRenderTable = function() {
               <tr
                 key={index}
                 style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
+                  alignItems: "center"
                 }}
               >
                 <td
@@ -161,7 +183,6 @@ export const DashboardRenderTable = function() {
                     }`}
                     style={{
                       fontSize: 12,
-                      width: "min-content",
                       padding: 4,
                       paddingTop: 1,
                       paddingBottom: 1,

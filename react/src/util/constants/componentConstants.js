@@ -77,6 +77,7 @@ export const API_LAUNCH_SIMPLE_TOKEN = 'launch_simple_token'
 export const API_LAUNCH_SIMPLE_TOKEN_PREFLIGHT = 'launch_simple_token_preflight'
 export const API_LAUNCH_SIMPLE_TOKEN_DEFINE = 'launch_simple_token_define'
 export const API_LAUNCH_SIMPLE_TOKEN_CALL = 'launch_simple_token_call'
+export const API_REGISTER_SIMPLE_TOKEN_ID = 'register_simple_token_id'
 
 // Non-blockchain API call paths
 export const LOAD_USERS = 'users/load'

@@ -20,7 +20,7 @@ import {
   NATIVE,
   API_REGISTER_ID_NAME,
   API_RECOVER_ID,
-  API_REGISTER_ID,
+  API_REGISTER_SIMPLE_TOKEN_ID,
   DEFAULT_REFERRAL_IDS,
   API_UPDATE_ID,
   API_CREATE_SIMPLE_TOKEN,
@@ -44,8 +44,8 @@ class CreateSimpleToken extends React.Component {
       case API_LAUNCH_SIMPLE_TOKEN:
           props.setModalHeader(`Launch Simple Token on ${name} Blockchain called ${props.modalProps.nameCommitmentObj.namereservation.name}`)
           break;
-      case API_REGISTER_ID:
-        props.setModalHeader(`Create ${name} ID for ${props.modalProps.nameCommitmentObj.namereservation.name}@`)
+      case API_REGISTER_SIMPLE_TOKEN_ID:
+        props.setModalHeader(`Create ${name} ID for Token of the same name: ${props.modalProps.nameCommitmentObj.namereservation.name}@`)
         break;
       case API_REGISTER_ID_NAME:
         props.setModalHeader(`Commit Name for ${name} ID`)
@@ -161,7 +161,7 @@ class CreateSimpleToken extends React.Component {
               simple_addresses,
               amount  
             );        
-        } else if (modalProps.modalType === API_REGISTER_ID) {
+        } else if (modalProps.modalType === API_REGISTER_SIMPLE_TOKEN_ID) {
           _txData = await registerId(
             !formStep,
             chainTicker,
@@ -215,7 +215,7 @@ class CreateSimpleToken extends React.Component {
                     MID_LENGTH_ALERT
                   )
                 );
-              } else if (modalProps.modalType === API_REGISTER_ID) {
+              } else if (modalProps.modalType === API_REGISTER_SIMPLE_TOKEN_ID) {
                 this.props.dispatch(
                   newSnackbar(
                     INFO_SNACK,
@@ -268,7 +268,7 @@ class CreateSimpleToken extends React.Component {
         } else {
           if (modalProps.modalType === API_REGISTER_ID_NAME) {
             this.props.dispatch(newSnackbar(ERROR_SNACK, "Error commiting name."))
-          } else if (modalProps.modalType === API_REGISTER_ID) {
+          } else if (modalProps.modalType === API_REGISTER_SIMPLE_TOKEN_ID) {
             this.props.dispatch(newSnackbar(ERROR_SNACK, "Error creating ID."))
           } else if (modalProps.modalType === API_CREATE_SIMPLE_TOKEN) {
             this.props.dispatch(newSnackbar(ERROR_SNACK, "Error creating Token."))

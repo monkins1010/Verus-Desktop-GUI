@@ -10,7 +10,7 @@ import {
   CREATE_SIMPLE_TOKEN,
   API_REGISTER_ID_NAME,
   NATIVE,
-  API_REGISTER_ID,
+  API_REGISTER_SIMPLE_TOKEN_ID,
   ID_POSTFIX,
   FIX_CHARACTER,
   API_GET_INFO,
@@ -102,7 +102,7 @@ class Dashboard extends React.Component {
   }
 
   openRegisterIdentityModal(nameCommitmentObj) {
-    openModal(CREATE_IDENTITY, { modalType: API_REGISTER_ID, chainTicker: nameCommitmentObj.chainTicker, nameCommitmentObj })
+    openModal(CREATE_SIMPLE_TOKEN, { modalType: API_REGISTER_SIMPLE_TOKEN_ID, chainTicker: nameCommitmentObj.chainTicker, nameCommitmentObj })
   }
 
   openLaunchSimpleTokenModal(nameCommitmentObj) {

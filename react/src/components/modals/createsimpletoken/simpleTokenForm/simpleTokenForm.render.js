@@ -44,6 +44,10 @@ export const SimpleTokenEnterRender = function() {
 
   return (
     <React.Fragment>
+       <p>
+          <b>Step 1:</b> Choose token name, referal id, the amount of tokens desired and the address the tokens are to be issued to.  
+       </p>
+      
       <TextField
         error={formErrors.name.length > 0}
         helperText={formErrors.name ? formErrors.name[0] : null}

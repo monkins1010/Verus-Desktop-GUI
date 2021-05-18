@@ -38,7 +38,7 @@ Hot reload will not work, so you need to refresh the page manually after changin
 ```
 npm run preview
 ```
-
+ 
 ## Linting
 
 ```
