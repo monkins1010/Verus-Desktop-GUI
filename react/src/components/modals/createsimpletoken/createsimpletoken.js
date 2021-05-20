@@ -131,17 +131,7 @@ class CreateSimpleToken extends React.Component {
             ? null
             : privateAddress;
 
-        if (modalProps.modalType === API_REGISTER_ID_NAME) {
-          _txData = await registerIdName(
-            !formStep,
-            chainTicker,
-            name,
-            (primaryAddress == null || primaryAddress.length === 0)
-              ? null
-              : primaryAddress,
-            this.selectReferralIdentity(referralId)
-          );
-        } else if (modalProps.modalType === API_CREATE_SIMPLE_TOKEN) {
+        if (modalProps.modalType === API_CREATE_SIMPLE_TOKEN) {
             _txData = await registerIdNameForSimpleToken(
               !formStep,
               chainTicker,
@@ -153,6 +143,22 @@ class CreateSimpleToken extends React.Component {
               simple_addresses,
               amount
             );
+          } else if (modalProps.modalType === API_REGISTER_SIMPLE_TOKEN_ID) {
+            _txData = await registerId(
+              !formStep,
+              chainTicker,
+              name,
+              txid,
+              salt,
+              [controlAddress], //primaryAddresses,
+              1,                // minimumSignatures,
+              {},               // contentmap,
+              revocationAuthority,
+              recoveryAuthority,
+              _privateAddress,
+              null,
+              this.selectReferralIdentity(referralId)
+            );
         } else if (modalProps.modalType === API_LAUNCH_SIMPLE_TOKEN) {
             _txData = await launchSimpleToken(
               !formStep,
@@ -161,96 +167,34 @@ class CreateSimpleToken extends React.Component {
               simple_addresses,
               amount  
             );        
-        } else if (modalProps.modalType === API_REGISTER_SIMPLE_TOKEN_ID) {
-          _txData = await registerId(
-            !formStep,
-            chainTicker,
-            name,
-            txid,
-            salt,
-            [controlAddress], //primaryAddresses,
-            1,                // minimumSignatures,
-            {},               // contentmap,
-            revocationAuthority,
-            recoveryAuthority,
-            _privateAddress,
-            null,
-            this.selectReferralIdentity(referralId)
-          );
-        } else if (modalProps.modalType === API_RECOVER_ID) {
-          _txData = await recoverId(
-            !formStep,
-            this.props.activeCoin.id,
-            name,
-            [controlAddress], //primaryAddresses,
-            1,                // minimumSignatures,
-            null,             // contentmap, null == keep old map,
-            revocationAuthority,
-            recoveryAuthority,
-            _privateAddress,
-          );
-        } else if (modalProps.modalType === API_UPDATE_ID) {
-          _txData = await updateId(
-            !formStep,
-            this.props.activeCoin.id,
-            name,
-            [controlAddress], //primaryAddresses,
-            1,                // minimumSignatures,
-            null,             // contentmap, null == keep old map,
-            revocationAuthority,
-            recoveryAuthority,
-            _privateAddress,
-          );
-        }
+            }
 
         this.props.setModalLock(false)
         if (_txData.msg === API_SUCCESS) {
           this.setState({ loadingProgress: 100 }, () => {
             if (formStep === CONFIRM_DATA) {
-              if (modalProps.modalType === API_REGISTER_ID_NAME) {
-                this.props.dispatch(
-                  newSnackbar(
-                    SUCCESS_SNACK,
-                    "Name committed. Please wait a few minutes for it to get confirmed, and then create your ID!",
-                    MID_LENGTH_ALERT
-                  )
-                );
-              } else if (modalProps.modalType === API_REGISTER_SIMPLE_TOKEN_ID) {
+             if (modalProps.modalType === API_REGISTER_SIMPLE_TOKEN_ID) {
                 this.props.dispatch(
                   newSnackbar(
                     INFO_SNACK,
-                    `ID transaction posted with txid ${_txData.result.resulttxid}, please wait for ID to get confirmed.`
+                    `ID Mined onto the blockchain, please wait for ID to get confirmed.`
                   )
                 );
               } else if (modalProps.modalType === API_CREATE_SIMPLE_TOKEN) {
                 this.props.dispatch(
                   newSnackbar(
                     INFO_SNACK,
-                    `Token ID Name committed. Please wait a few minutes for it to get confirmed, and then create your ID!`
+                    `Token ID Name committed. Please wait a few minutes for it to get confirmed`
                   )
                 );
               } else if (modalProps.modalType === API_LAUNCH_SIMPLE_TOKEN) {
                 this.props.dispatch(
                   newSnackbar(
-                    INFO_SNACK,
-                    `Token Launching. Please wait a few minutes for Token to launch!`
+                    SUCCESS_SNACK,
+                    `Token Launching. Please wait up to 20 minutes for Token to launch!`
                   )
                 );
-              } else if (modalProps.modalType === API_RECOVER_ID) {
-                this.props.dispatch(
-                  newSnackbar(
-                    INFO_SNACK,
-                    `ID recovery transaction posted with txid ${_txData.result.resulttxid}, please wait for it to get confirmed.`
-                  )
-                );
-              } else if (modalProps.modalType === API_UPDATE_ID) {
-                this.props.dispatch(
-                  newSnackbar(
-                    INFO_SNACK,
-                    `ID update transaction posted with txid ${_txData.result.resulttxid}, please wait for it to get confirmed.`
-                  )
-                );
-              }
+              } 
 
               // Expire transactions and balances
               this.props.dispatch(expireData(this.props.activeCoin.id, API_GET_TRANSACTIONS))
@@ -259,6 +203,7 @@ class CreateSimpleToken extends React.Component {
               this.props.dispatch(expireData(this.props.activeCoin.id, API_GET_IDENTITIES))
               this.props.dispatch(expireData(this.props.activeCoin.id, API_LAUNCH_SIMPLE_TOKEN))
               this.props.dispatch(expireData(this.props.activeCoin.id, API_CREATE_SIMPLE_TOKEN))
+              this.props.dispatch(expireData(this.props.activeCoin.id, API_REGISTER_SIMPLE_TOKEN_ID))
               conditionallyUpdateWallet(Store.getState(), this.props.dispatch, NATIVE, this.props.activeCoin.id, API_GET_TRANSACTIONS)
               conditionallyUpdateWallet(Store.getState(), this.props.dispatch, NATIVE, this.props.activeCoin.id, API_GET_NAME_COMMITMENTS)
             }
@@ -266,19 +211,13 @@ class CreateSimpleToken extends React.Component {
             this.setState({ loading: false, txData: {status: API_SUCCESS, ..._txData.result}, formStep: formStep + 1 })
           })
         } else {
-          if (modalProps.modalType === API_REGISTER_ID_NAME) {
-            this.props.dispatch(newSnackbar(ERROR_SNACK, "Error commiting name."))
-          } else if (modalProps.modalType === API_REGISTER_SIMPLE_TOKEN_ID) {
+          if (modalProps.modalType === API_REGISTER_SIMPLE_TOKEN_ID) {
             this.props.dispatch(newSnackbar(ERROR_SNACK, "Error creating ID."))
           } else if (modalProps.modalType === API_CREATE_SIMPLE_TOKEN) {
             this.props.dispatch(newSnackbar(ERROR_SNACK, "Error creating Token."))
           } else if (modalProps.modalType === API_LAUNCH_SIMPLE_TOKEN) {
             this.props.dispatch(newSnackbar(ERROR_SNACK, "Error Launching Token."))
-          } else if (modalProps.modalType === API_RECOVER_ID) {
-            this.props.dispatch(newSnackbar(ERROR_SNACK, "Error recovering ID."))
-          } else if (modalProps.modalType === API_UPDATE_ID) {
-            this.props.dispatch(newSnackbar(ERROR_SNACK, "Error updating ID."))
-          }
+          } 
 
           throw new Error(_txData.result)
         }

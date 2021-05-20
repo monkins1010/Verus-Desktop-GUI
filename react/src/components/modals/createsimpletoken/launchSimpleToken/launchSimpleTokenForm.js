@@ -33,7 +33,8 @@ class launchSimpleTokenForm extends React.Component {
         recoveryId: [],
         privateAddr: []
       },
-      txDataDisplay: {}
+      txDataDisplay: {},
+      go: false
     };
 
     this.updateFormData = this.updateFormData.bind(this);
@@ -43,6 +44,15 @@ class launchSimpleTokenForm extends React.Component {
     this.updateFormErrors = this.updateFormErrors.bind(this);
     this.generateTxDataDisplay = this.generateTxDataDisplay.bind(this);
     this.initFormData = this.initFormData.bind(this);
+  }
+
+  handleRender() {
+    setTimeout(() => {
+      this.props.advanceFormStep_trigger()
+    }, 2000);
+    setTimeout(() => {
+      this.props.advanceFormStep_trigger()
+    }, 3000);
   }
 
   componentWillMount() {
@@ -55,8 +65,9 @@ class launchSimpleTokenForm extends React.Component {
     const { formStep, identity } = this.props
 
     if (formStep === ENTER_DATA) {
-      this.initFormData()
+      this.initFormData();
     }
+    
   }
 
   initFormData() {
@@ -77,6 +88,7 @@ class launchSimpleTokenForm extends React.Component {
         this.updateFormErrors(this.updateFormData);
       }
     );
+    this.handleRender();
   }
 
   componentDidUpdate(lastProps) {
@@ -89,6 +101,8 @@ class launchSimpleTokenForm extends React.Component {
         this.initFormData()
       }
     }
+
+  
   }
 
   generateWarningSnack(warnings) {

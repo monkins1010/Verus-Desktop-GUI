@@ -107,7 +107,7 @@ export const DashboardRenderTable = function() {
         <tr>
           <th scope="col">Identity</th>
           <th scope="col">Project status</th>
-          <th scope="col">Action</th>
+          <th scope="col">Project type</th>
           <th scope="col">Delete?</th>
         </tr>
         </thead>
@@ -143,6 +143,7 @@ export const DashboardRenderTable = function() {
                     } else {
                       failed = true
                     }
+
                   }
                 }
               }
@@ -150,6 +151,36 @@ export const DashboardRenderTable = function() {
               loading = true
             }
 
+            if(reservationObj.tokenState)
+              if(reservationObj.tokenState === 1)
+                isToken =true
+
+            if(reservationObj.confirmations > 0 && !loading && !isUsed && !failed && !this.state.factoryIDBusy && reservationObj.amount)
+            { 
+              this.openRegisterIdentityModal(reservationObj)
+            }
+            if(this.state.factoryIDBusy && reservationObj.txid === this.state.factorytxid && !isUsed && reservationObj.amount)
+               { loading =true;}
+
+            if(!this.state.factoryIDBusy && isUsed && reservationObj.amount && reservationObj.txid != this.state.factorytxid ){
+              this.setState({ factoryIDBusy: true })
+              this.setState({ factorytxid: reservationObj.txid }) 
+
+            } 
+
+            
+            if(this.state.factoryIDBusy && !this.state.factoryLaunchbusy && reservationObj.txid === this.state.factorytxid && isUsed && reservationObj.amount && !isToken)
+            {
+
+              this.openLaunchSimpleTokenModal(reservationObj);
+              this.setState({ factoryLaunchbusy: true })
+              this.setState({ factorytxid: reservationObj.txid }) 
+            }
+
+
+
+            if(!reservationObj.amount)
+                return null
             return (
               <tr
                 key={index}
@@ -173,17 +204,18 @@ export const DashboardRenderTable = function() {
                 <td style={{ borderTop: 0 }}>
                   <h3
                     className={`d-lg-flex align-items-lg-center coin-type ${
+                      isToken ? "green" :
                       reservationObj.confirmations == null || isUsed || loading
                         ? "native"
                         : failed
                         ? "red"
-                        : reservationObj.confirmations > 0
+                        : reservationObj.confirmations > 0 
                         ? "green"
                         : "lite"
                     }`}
                     style={{
                       fontSize: 12,
-                      padding: 4,
+                      padding: 1,
                       paddingTop: 1,
                       paddingBottom: 1,
                       borderWidth: 1,
@@ -191,7 +223,7 @@ export const DashboardRenderTable = function() {
                     }}
                   >
                     {loading
-                      ? "Processing..."
+                      ? "Processing... Please Wait a few minutes"
                       : isToken
                       ? "Token Launched"
                       : isUsed
@@ -204,58 +236,13 @@ export const DashboardRenderTable = function() {
                       : "Pending Name commitment..."}
                   </h3>
                 </td>
-                <td style={{ borderTop: 0 }}>
-                  {
-                    <a
-                      className="card-link text-right"
-                      href={
-                        reservationObj.confirmations == null ||
-                        reservationObj.confirmations == 0 ||
-                        loading
-                          ? undefined
-                          : "#"
-                      }
-                      style={{
-                        fontSize: 14,
-                        color:
-                          reservationObj.confirmations == null ||
-                          reservationObj.confirmations == 0 ||
-                          loading
-                            ? "rgb(0,0,0)"
-                            : "rgb(49, 101, 212)",
-                      }}
-                      onClick={
-                        failed
-                          ? () =>
-                              this.openCommitNameModal(chainTicker, {
-                                name: namereservation.name,
-                                referralId: namereservation.referral,
-                              })
-                          : reservationObj.confirmations == null ||
-                            reservationObj.confirmations == 0 ||
-                            loading
-                          ? () => {
-                              return 0;
-                            }
-                          : isUsed
-                          ? () => this.openLaunchSimpleTokenModal(reservationObj)
-                          : () => this.openRegisterIdentityModal(reservationObj)
-                      }
-                    >
-                      {loading
-                        ? "Processing Please wait..."
-                        : isToken
-                        ? "Token Launched"
-                        : isUsed
-                        ? "Launch Token"
-                        : failed
-                        ? "Try again"
-                        : reservationObj.confirmations != null &&
-                          reservationObj.confirmations > 0
-                        ? "Create Verus ID"
-                        : "Waiting for confirmation..."}
-                    </a>
-                  }
+                <td
+                  style={{
+                    color: "rgb(0,0,0)",
+                    borderTop: 0,
+                  }}
+                >
+                  {"Simple Token"}
                 </td>
                 <td style={{ borderTop: 0 }}>
                   <Tooltip title="Untrack">

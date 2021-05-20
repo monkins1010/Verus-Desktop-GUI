@@ -66,7 +66,7 @@ class RegisterSimpleTokenIdentityForm extends React.Component {
           ? ""
           : `.${chainTicker}`
       }@`,
-      privateAddr: addresses[chainTicker][PRIVATE_ADDRS][0].address,
+      privateAddr: "" //addresses[chainTicker][PRIVATE_ADDRS] === 0 ? null : addresses[chainTicker][PRIVATE_ADDRS][0].address,
      })
     }
 

@@ -45,7 +45,7 @@ export const SimpleTokenEnterRender = function() {
   return (
     <React.Fragment>
        <p>
-          <b>Step 1:</b> Choose token name, referal id, the amount of tokens desired and the address the tokens are to be issued to.  
+          Choose your token name, referal id, the amount of tokens and the address the tokens are to be issued to. Estimated Fee 300.0006 VRSC (100 VRSC for ID and 200.0006 VRSC for Token Launch)
        </p>
       
       <TextField

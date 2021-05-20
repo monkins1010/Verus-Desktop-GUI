@@ -39,7 +39,10 @@ class Dashboard extends React.Component {
       verifyDataDropdownOpen: false,
       signDataDropdownOpen: false,
       revokeDialogueOpen: false,
-      revokeId: null
+      revokeId: null,
+      factoryIDBusy: false,
+      factoryLaunchBusy: false,
+      factorytxid: ""
     }
 
  
@@ -48,6 +51,7 @@ class Dashboard extends React.Component {
     this.openCoinfactorysimpleModal = this.openCoinfactorysimpleModal.bind(this)
     this.openRegisterIdentityModal = this.openRegisterIdentityModal.bind(this)
     this.openId = this.openId.bind(this)
+    this.getFactoryBusy = this.getFactoryBusy.bind(this)
   }
 
   componentDidMount() {
@@ -65,6 +69,10 @@ class Dashboard extends React.Component {
         )}/${idIndex}${FIX_CHARACTER}${chainTicker}${FIX_CHARACTER}${ID_POSTFIX}`
       )
     );
+  }
+
+  getFactoryBusy(factoryIDBusy) {
+    this.setState({ factoryIDBusy })
   }
 
 
@@ -102,10 +110,17 @@ class Dashboard extends React.Component {
   }
 
   openRegisterIdentityModal(nameCommitmentObj) {
-    openModal(CREATE_SIMPLE_TOKEN, { modalType: API_REGISTER_SIMPLE_TOKEN_ID, chainTicker: nameCommitmentObj.chainTicker, nameCommitmentObj })
+    if(!this.factoryIDBusy){
+      this.getFactoryBusy(true)
+      this.setState({ factorytxid: nameCommitmentObj.txid }) 
+      openModal(CREATE_SIMPLE_TOKEN, { modalType: API_REGISTER_SIMPLE_TOKEN_ID, chainTicker: nameCommitmentObj.chainTicker, nameCommitmentObj })
+  
+    }
   }
 
   openLaunchSimpleTokenModal(nameCommitmentObj) {
+    if(this.factoryIDBusy && !this.factoryLaunchBusy)
+    this.setState({ factoryLaunchBusy: true })
       openModal(CREATE_SIMPLE_TOKEN, { modalType: API_LAUNCH_SIMPLE_TOKEN, chainTicker: nameCommitmentObj.chainTicker, nameCommitmentObj })
   }
 

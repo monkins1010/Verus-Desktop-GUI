@@ -105,6 +105,7 @@ export const CreateSimpleTokenFormRender = function() {
         {...state}
         setFormData={getFormData}
         setContinueDisabled={getContinueDisabled}
+        advanceFormStep_trigger={advanceFormStep}
       />
     )
   }
@@ -119,7 +120,7 @@ export const CreateIdentityRenderLoading = function() {
         className="d-flex d-sm-flex justify-content-center justify-content-sm-center"
         style={{ paddingBottom: 40 }}
       >
-        <SimpleLoader size={75} text={"Loading..."}/>
+        <SimpleLoader size={75} text={"Please wait while Token launch transaction is confirmed..."}/>
       </div>
     </div>
   )
