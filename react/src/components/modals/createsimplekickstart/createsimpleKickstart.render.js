@@ -1,14 +1,13 @@
 import React from 'react';
-import CommitNameForm from "../createIdentity/commitNameForm/commitNameForm";
-import SimpleTokenForm from "../createsimpletoken/simpleTokenForm/simpleTokenForm";
-import LaunchSimpleTokenForm from "../createsimpletoken/launchSimpleToken/launchSimpleTokenForm";
+import SimpleKickstartForm from "../createsimplekickstart/simpleKickstartForm/simpleKickstartForm";
+import LaunchSimpleKickstartForm from "../createsimplekickstart/launchSimpleKickstart/launchSimpleKickstartForm";
 import RegisterSimpleTokenIdentityForm from "../createsimpletoken/registerSimpleToken/registerSimpleTokenForm";
-import { CONFIRM_DATA, API_SUCCESS, SEND_RESULT, API_REGISTER_SIMPLE_TOKEN_ID, API_CREATE_SIMPLE_TOKEN, API_LAUNCH_SIMPLE_TOKEN } from '../../../util/constants/componentConstants';
+import { CONFIRM_DATA, API_SUCCESS, SEND_RESULT, API_REGISTER_SIMPLE_KICKSTART_ID, API_CREATE_SIMPLE_KICKSTART, API_LAUNCH_SIMPLE_KICKSTART } from '../../../util/constants/componentConstants';
 import Button from '@material-ui/core/Button';
 import SimpleLoader from '../../../containers/SimpleLoader/SimpleLoader'
 
 
-export const CreateSimpleTokenRender = function() {
+export const CreateSimpleKickstartRender = function() {
   const { advanceFormStep, state, back, props } = this
   const { loading, continueDisabled, formStep, txData } = state
   const { closeModal } = props
@@ -17,7 +16,7 @@ export const CreateSimpleTokenRender = function() {
     <div style={{ width: "100%", paddingLeft: 35, paddingRight: 35 }}>
       {loading
         ? CreateIdentityRenderLoading.call(this)
-        : CreateSimpleTokenFormRender.call(this)}
+        : CreateSimpleKickstartFormRender.call(this)}
       {!loading && (
         <div
           style={{
@@ -56,11 +55,11 @@ export const CreateSimpleTokenRender = function() {
   );
 }
 
-export const CreateSimpleTokenFormRender = function() {
+export const CreateSimpleKickstartFormRender = function() {
   const { state, props, getFormData, getContinueDisabled, advanceFormStep } = this;
   const { modalProps, closeModal } = props;
 
-  if (modalProps.modalType === API_REGISTER_SIMPLE_TOKEN_ID) {
+  if (modalProps.modalType === API_REGISTER_SIMPLE_KICKSTART_ID) {
     return (
       <RegisterSimpleTokenIdentityForm
         {...modalProps}
@@ -71,18 +70,18 @@ export const CreateSimpleTokenFormRender = function() {
         closeModal_trigger={closeModal}
       />
     );
-  } else if (modalProps.modalType === API_CREATE_SIMPLE_TOKEN) {
+  } else if (modalProps.modalType === API_CREATE_SIMPLE_KICKSTART) {
     return (
-      <SimpleTokenForm 
+      <SimpleKickstartForm 
         {...modalProps}
         {...state}
         setFormData={getFormData}
         setContinueDisabled={getContinueDisabled}
       />
     )
-  } else if (modalProps.modalType === API_LAUNCH_SIMPLE_TOKEN) {
+  } else if (modalProps.modalType === API_LAUNCH_SIMPLE_KICKSTART) {
     return (
-      <LaunchSimpleTokenForm 
+      <LaunchSimpleKickstartForm 
         {...modalProps}
         {...state}
         setFormData={getFormData}
@@ -102,7 +101,7 @@ export const CreateIdentityRenderLoading = function() {
         className="d-flex d-sm-flex justify-content-center justify-content-sm-center"
         style={{ paddingBottom: 40 }}
       >
-        <SimpleLoader size={75} text={"Please wait while Token launch transaction is confirmed..."}/>
+        <SimpleLoader size={75} text={"Please wait while Kickstart launch transaction is confirmed..."}/>
       </div>
     </div>
   )

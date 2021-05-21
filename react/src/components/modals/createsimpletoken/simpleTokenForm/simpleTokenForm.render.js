@@ -99,15 +99,16 @@ export const SimpleTokenEnterRender = function() {
           style={{ marginTop: 5, minWidth: "57%" }}
 
        />
-      <TextField
+      <SuggestionInput
         error={formErrors.simple_addresses.length > 0}
         helperText={formErrors.simple_addresses ? formErrors.simple_addresses[0] : null}
-        label="Enter address to recieve tokens"
+        label="Enter address to receive tokens"
+        items={identities.map((id) => `${id.identity.name}@`)}
         variant="outlined"
         onChange={updateInput}
         name="simple_addresses"
         value={simple_addresses}
-        style={{ marginTop: 5, width: "100%" }}
+        containerStyle={{ marginTop: 5, width: "75%" }}
       />
     </React.Fragment>
   );

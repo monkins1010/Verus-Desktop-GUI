@@ -4,17 +4,18 @@ import {
   API_CREATE_SIMPLE_TOKEN_PREFLIGHT,
   NATIVE,
   API_LAUNCH_SIMPLE_TOKEN_PREFLIGHT,
-  API_LAUNCH_SIMPLE_TOKEN
+  API_LAUNCH_SIMPLE_TOKEN,
+  API_LAUNCH_SIMPLE_KICKSTART,
+  API_LAUNCH_SIMPLE_KICKSTART_PREFLIGHT
 } from "../../../constants/componentConstants";
 
-export const registerIdNameForSimpleToken = async (
+export const registerIdNameForFactory = async (
   preflight,
   chainTicker,
   name,
   primaryAddress,
   referralId,
-  simple_addresses,
-  amount
+  extra
 ) => {
   try {
 
@@ -27,16 +28,14 @@ export const registerIdNameForSimpleToken = async (
         name,
         referralId,
         primaryAddress,
-        simple_addresses,
-        amount,
+        extra,
         delocalize: true
       } : {
         chainTicker,
         name,
         referralId,
         tmp_null,
-        simple_addresses,
-        amount,
+        extra,
         delocalize: true
       }
     );
@@ -56,8 +55,7 @@ export const registerIdNameForSimpleToken = async (
     amount
   ) => {
     try {
-  
-    //  var options = 96; // token paramter to launch simple token
+
       return await getApiData(
         NATIVE,
         preflight ? API_LAUNCH_SIMPLE_TOKEN_PREFLIGHT : API_LAUNCH_SIMPLE_TOKEN,
@@ -75,3 +73,26 @@ export const registerIdNameForSimpleToken = async (
   };
   
 
+  export const launchSimpleKickstart = async (
+    preflight,
+    chainTicker,
+    name,
+    extra
+  ) => {
+    try {
+  
+    //  var options = 96; // token paramter to launch simple token
+      return await getApiData(
+        NATIVE,
+        preflight ? API_LAUNCH_SIMPLE_KICKSTART_PREFLIGHT : API_LAUNCH_SIMPLE_KICKSTART,
+        {
+          chainTicker,
+          name,
+          extra,
+          delocalize: true
+        } 
+      );
+    } catch (e) {
+      throw e
+    }
+  };

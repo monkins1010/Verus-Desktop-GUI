@@ -6,32 +6,28 @@ import {
 } from './dashboard.render';
 import Store from '../../../../../store'
 import {
-  CREATE_IDENTITY,
   CREATE_SIMPLE_TOKEN,
-  API_REGISTER_ID_NAME,
+  CREATE_SIMPLE_KICKSTART,
   NATIVE,
   API_REGISTER_SIMPLE_TOKEN_ID,
   ID_POSTFIX,
   FIX_CHARACTER,
   API_GET_INFO,
   API_LAUNCH_SIMPLE_TOKEN,
-  API_GET_MININGINFO,
   API_GET_CPU_TEMP,
   API_CREATE_SIMPLE_TOKEN,
-  API_GET_IDENTITIES
+  API_GET_IDENTITIES,
+  API_CREATE_SIMPLE_KICKSTART,
+  API_LAUNCH_SIMPLE_KICKSTART
 } from "../../../../../util/constants/componentConstants";
-import { conditionallyUpdateWallet, openModal } from '../../../../../actions/actionDispatchers';
+import { openModal } from '../../../../../actions/actionDispatchers';
 
 class Dashboard extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      coinsMining: 0,
       coinsStaking: 0,
-      tokenname: '',
-      tokensupply: '',
-      tokenaddresses: '',
       displayNameCommitments: [],
       compiledIds: [],
       nameReservationDropdownOpen: false,
@@ -51,7 +47,8 @@ class Dashboard extends React.Component {
     this.openCoinfactorysimpleModal = this.openCoinfactorysimpleModal.bind(this)
     this.openRegisterIdentityModal = this.openRegisterIdentityModal.bind(this)
     this.openId = this.openId.bind(this)
-    this.getFactoryBusy = this.getFactoryBusy.bind(this)
+    this.getFactoryIDBusy = this.getFactoryIDBusy.bind(this)
+    this.getFactoryLaunchBusy = this.getFactoryLaunchBusy.bind(this)
   }
 
   componentDidMount() {
@@ -71,10 +68,13 @@ class Dashboard extends React.Component {
     );
   }
 
-  getFactoryBusy(factoryIDBusy) {
+  getFactoryIDBusy(factoryIDBusy) {
     this.setState({ factoryIDBusy })
   }
 
+  getFactoryLaunchBusy(factoryLaunchBusy) {
+    this.setState({ factoryLaunchBusy })
+  }
 
   componentDidUpdate(lastProps) {
     if (this.props != lastProps) {
@@ -98,20 +98,18 @@ class Dashboard extends React.Component {
     this.setState({ compiledIds })
   }
 
+  //************SImple Token**************
 
   openCoinfactorysimpleModal(chainTicker, commitmentData = null) {
-    if(!chainTicker)
-    toast("Chain not selected from tab menu on left");
-    else
+    if(chainTicker || !this.factoryIDBusy)
     {
-      //Open create simple token modal
       openModal(CREATE_SIMPLE_TOKEN, { modalType: API_CREATE_SIMPLE_TOKEN, chainTicker, commitmentData })
     }
   }
 
   openRegisterIdentityModal(nameCommitmentObj) {
     if(!this.factoryIDBusy){
-      this.getFactoryBusy(true)
+      this.getFactoryIDBusy(true)
       this.setState({ factorytxid: nameCommitmentObj.txid }) 
       openModal(CREATE_SIMPLE_TOKEN, { modalType: API_REGISTER_SIMPLE_TOKEN_ID, chainTicker: nameCommitmentObj.chainTicker, nameCommitmentObj })
   
@@ -124,7 +122,20 @@ class Dashboard extends React.Component {
       openModal(CREATE_SIMPLE_TOKEN, { modalType: API_LAUNCH_SIMPLE_TOKEN, chainTicker: nameCommitmentObj.chainTicker, nameCommitmentObj })
   }
 
+  //************SImple Kick start**************
 
+  openSimpleKickstartModal(chainTicker, commitmentData = null) {
+    if(chainTicker || !this.factoryIDBusy)
+    {
+      openModal(CREATE_SIMPLE_KICKSTART, { modalType: API_CREATE_SIMPLE_KICKSTART, chainTicker, commitmentData })
+    }
+  }
+
+  openLaunchSimpleKickstartModal(nameCommitmentObj) {
+    if(this.factoryIDBusy && !this.factoryLaunchBusy)
+    this.setState({ factoryLaunchBusy: true })
+      openModal(CREATE_SIMPLE_KICKSTART, { modalType: API_LAUNCH_SIMPLE_KICKSTART, chainTicker: nameCommitmentObj.chainTicker, nameCommitmentObj })
+  }
 
   compileCommits() {
     const { nameCommitments, transactions } = this.props

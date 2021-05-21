@@ -1,10 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import {
-  CreateSimpleTokenRender
-} from './createsimpletoken.render';
+  CreateSimpleKickstartRender
+} from './createsimpleKickstart.render';
 import {
-  CREATE_SIMPLE_TOKEN,
+  CREATE_SIMPLE_KICKSTART,
   ENTER_DATA,
   API_SUCCESS,
   ERROR_SNACK,
@@ -18,31 +18,31 @@ import {
   API_GET_IDENTITIES,
   MID_LENGTH_ALERT,
   NATIVE,
-  API_REGISTER_SIMPLE_TOKEN_ID,
+  API_REGISTER_SIMPLE_KICKSTART_ID,
   DEFAULT_REFERRAL_IDS,
-  API_CREATE_SIMPLE_TOKEN,
-  API_LAUNCH_SIMPLE_TOKEN
+  API_CREATE_SIMPLE_KICKSTART,
+  API_LAUNCH_SIMPLE_KICKSTART
 } from "../../../util/constants/componentConstants";
-import { registerIdNameForFactory, registerId, launchSimpleToken } from '../../../util/api/wallet/walletCalls';
+import { registerIdNameForFactory, registerId, launchSimpleKickstart } from '../../../util/api/wallet/walletCalls';
 import { newSnackbar, expireData } from '../../../actions/actionCreators';
 import { conditionallyUpdateWallet } from '../../../actions/actionDispatchers';
 import Store from '../../../store'
 
-class CreateSimpleToken extends React.Component {
+class CreateSimpleKickstart extends React.Component {
   constructor(props) {
     super(props);
     const { activeCoin } = props
     const { name } = activeCoin
 
     switch (props.modalProps.modalType) {
-      case API_CREATE_SIMPLE_TOKEN:
-        props.setModalHeader(`Create Simple token on ${name} Blockchain`)
+      case API_CREATE_SIMPLE_KICKSTART:
+        props.setModalHeader(`Create Simple Kickstart on ${name} Blockchain`)
         break;
-      case API_LAUNCH_SIMPLE_TOKEN:
-          props.setModalHeader(`Launch Simple Token on ${name} Blockchain called ${props.modalProps.nameCommitmentObj.namereservation.name}`)
+      case API_LAUNCH_SIMPLE_KICKSTART:
+          props.setModalHeader(`Launch Simple Kickstart on ${name} Blockchain called ${props.modalProps.nameCommitmentObj.namereservation.name}`)
           break;
-      case API_REGISTER_SIMPLE_TOKEN_ID:
-        props.setModalHeader(`Create ${name} ID for Token of the same name: ${props.modalProps.nameCommitmentObj.namereservation.name}@`)
+      case API_REGISTER_SIMPLE_KICKSTART_ID:
+        props.setModalHeader(`Create ${name} ID for Kickstart of the same name: ${props.modalProps.nameCommitmentObj.namereservation.name}@`)
         break;
       default:
         break;
@@ -104,8 +104,7 @@ class CreateSimpleToken extends React.Component {
           recoveryAuthority,
           privateAddress,
           primaryAddress,
-          simple_addresses,
-          amount
+          extra
         } = formData;
 
         const _privateAddress =
@@ -113,7 +112,7 @@ class CreateSimpleToken extends React.Component {
             ? null
             : privateAddress;
 
-        if (modalProps.modalType === API_CREATE_SIMPLE_TOKEN) {
+        if (modalProps.modalType === API_CREATE_SIMPLE_KICKSTART) {
             _txData = await registerIdNameForFactory(
               !formStep,
               chainTicker,
@@ -122,9 +121,9 @@ class CreateSimpleToken extends React.Component {
                 ? null
                 : primaryAddress,
               this.selectReferralIdentity(referralId),
-              { simple_addresses, amount, tokenState: 0, type: "SIMPLETOKEN"}
+              extra
             );
-          } else if (modalProps.modalType === API_REGISTER_SIMPLE_TOKEN_ID) {
+          } else if (modalProps.modalType === API_REGISTER_SIMPLE_KICKSTART_ID) {
             _txData = await registerId(
               !formStep,
               chainTicker,
@@ -140,13 +139,12 @@ class CreateSimpleToken extends React.Component {
               null,
               this.selectReferralIdentity(referralId)
             );
-        } else if (modalProps.modalType === API_LAUNCH_SIMPLE_TOKEN) {
-            _txData = await launchSimpleToken(
+        } else if (modalProps.modalType === API_LAUNCH_SIMPLE_KICKSTART) {
+            _txData = await launchSimpleKickstart(
               !formStep,
               chainTicker,
               name,
-              simple_addresses,
-              amount  
+              extra 
             );        
             }
 
@@ -154,25 +152,25 @@ class CreateSimpleToken extends React.Component {
         if (_txData.msg === API_SUCCESS) {
           this.setState({ loadingProgress: 100 }, () => {
             if (formStep === CONFIRM_DATA) {
-             if (modalProps.modalType === API_REGISTER_SIMPLE_TOKEN_ID) {
+             if (modalProps.modalType === API_REGISTER_SIMPLE_KICKSTART_ID) {
                 this.props.dispatch(
                   newSnackbar(
                     INFO_SNACK,
                     `ID Mined onto the blockchain, please wait for ID to get confirmed.`
                   )
                 );
-              } else if (modalProps.modalType === API_CREATE_SIMPLE_TOKEN) {
+              } else if (modalProps.modalType === API_CREATE_SIMPLE_KICKSTART) {
                 this.props.dispatch(
                   newSnackbar(
                     INFO_SNACK,
-                    `Token ID Name committed. Please wait a few minutes for it to get confirmed`
+                    `Simple Kickstart ID Name committed. Please wait a few minutes for it to get confirmed`
                   )
                 );
-              } else if (modalProps.modalType === API_LAUNCH_SIMPLE_TOKEN) {
+              } else if (modalProps.modalType === API_LAUNCH_SIMPLE_KICKSTART) {
                 this.props.dispatch(
                   newSnackbar(
                     SUCCESS_SNACK,
-                    `Token Launching. Please wait up to 20 minutes for Token to launch!`
+                    `Simple Kickstart Launching. Please wait up to 20 minutes for Kickstart to launch!`
                   )
                 );
               } 
@@ -182,9 +180,9 @@ class CreateSimpleToken extends React.Component {
               this.props.dispatch(expireData(this.props.activeCoin.id, API_GET_BALANCES))
               this.props.dispatch(expireData(this.props.activeCoin.id, API_GET_NAME_COMMITMENTS))
               this.props.dispatch(expireData(this.props.activeCoin.id, API_GET_IDENTITIES))
-              this.props.dispatch(expireData(this.props.activeCoin.id, API_LAUNCH_SIMPLE_TOKEN))
-              this.props.dispatch(expireData(this.props.activeCoin.id, API_CREATE_SIMPLE_TOKEN))
-              this.props.dispatch(expireData(this.props.activeCoin.id, API_REGISTER_SIMPLE_TOKEN_ID))
+              this.props.dispatch(expireData(this.props.activeCoin.id, API_LAUNCH_SIMPLE_KICKSTART))
+              this.props.dispatch(expireData(this.props.activeCoin.id, API_CREATE_SIMPLE_KICKSTART))
+              this.props.dispatch(expireData(this.props.activeCoin.id, API_REGISTER_SIMPLE_KICKSTART_ID))
               conditionallyUpdateWallet(Store.getState(), this.props.dispatch, NATIVE, this.props.activeCoin.id, API_GET_TRANSACTIONS)
               conditionallyUpdateWallet(Store.getState(), this.props.dispatch, NATIVE, this.props.activeCoin.id, API_GET_NAME_COMMITMENTS)
             }
@@ -192,12 +190,12 @@ class CreateSimpleToken extends React.Component {
             this.setState({ loading: false, txData: {status: API_SUCCESS, ..._txData.result}, formStep: formStep + 1 })
           })
         } else {
-          if (modalProps.modalType === API_REGISTER_SIMPLE_TOKEN_ID) {
+          if (modalProps.modalType === API_REGISTER_SIMPLE_KICKSTART_ID) {
             this.props.dispatch(newSnackbar(ERROR_SNACK, "Error creating ID."))
-          } else if (modalProps.modalType === API_CREATE_SIMPLE_TOKEN) {
-            this.props.dispatch(newSnackbar(ERROR_SNACK, "Error creating Token."))
-          } else if (modalProps.modalType === API_LAUNCH_SIMPLE_TOKEN) {
-            this.props.dispatch(newSnackbar(ERROR_SNACK, "Error Launching Token."))
+          } else if (modalProps.modalType === API_CREATE_SIMPLE_KICKSTART) {
+            this.props.dispatch(newSnackbar(ERROR_SNACK, "Error creating Kickstart."))
+          } else if (modalProps.modalType === API_LAUNCH_SIMPLE_KICKSTART) {
+            this.props.dispatch(newSnackbar(ERROR_SNACK, "Error Launching Kickstart."))
           } 
 
           throw new Error(_txData.result)
@@ -215,19 +213,19 @@ class CreateSimpleToken extends React.Component {
   }
 
   render() {
-    return CreateSimpleTokenRender.call(this);
+    return CreateSimpleKickstartRender.call(this);
   }
 }
 
 const mapStateToProps = (state) => {
-  const { chainTicker } = state.modal[CREATE_SIMPLE_TOKEN]
+  const { chainTicker } = state.modal[CREATE_SIMPLE_KICKSTART]
 
   return {
     activeCoin: state.coins.activatedCoins[chainTicker],
     balances: state.ledger.balances[chainTicker],
     addresses: state.ledger.addresses[chainTicker],
-    modalProps: state.modal[CREATE_SIMPLE_TOKEN]
+    modalProps: state.modal[CREATE_SIMPLE_KICKSTART]
   };
 };
 
-export default connect(mapStateToProps)(CreateSimpleToken);
+export default connect(mapStateToProps)(CreateSimpleKickstart);

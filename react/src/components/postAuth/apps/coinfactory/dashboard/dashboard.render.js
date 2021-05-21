@@ -1,21 +1,9 @@
 import React from "react";
 import ReactMinimalPieChart from "react-minimal-pie-chart";
 import {
-  MS_OFF,
-  MS_IDLE,
-  MS_MINING_STAKING,
-  MS_MERGE_MINING_STAKING,
-  MS_MERGE_MINING,
-  MS_MINING,
-  IS_VERUS,
-  CPU_TEMP_UNSUPPORTED,
-  STAKE_WARNING,
-  STAKE_BALANCE_INFO,
-  CHAIN_FALLBACK_IMAGE
+  TF_SIMPLE_TOKEN
 } from "../../../../../util/constants/componentConstants";
-import OpenInNewIcon from '@material-ui/icons/OpenInNew';
-import { secondsToTime } from "../../../../../util/displayUtil/timeUtils";
-import { normalizeNum } from "../../../../../util/displayUtil/numberFormat";
+
 import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
 import WalletPaper from "../../../../../containers/WalletPaper/WalletPaper";
@@ -58,8 +46,7 @@ export const DashboardRender = function() {
           borderColor: "rgb(49, 101, 212)",
           width : '152px'
         }}
-        onClick={ () => this.openCoinfactorysimpleModal(identityChains[0])
-        }
+        onClick={ () => this.openCoinfactorysimpleModal(identityChains[0])}
        >
         {"Create Simple Token"}
       </button>
@@ -81,7 +68,7 @@ export const DashboardRender = function() {
           borderColor: "rgb(49, 101, 212)",
           width : '152px'
         }}
-        
+        onClick={ () => this.openSimpleKickstartModal(identityChains[0])}
        >
         {"Create Kickstarter"}
       </button>
@@ -117,7 +104,10 @@ export const DashboardRenderTable = function() {
             const { identities, transactions } = this.props
             let isUsed = false
             let isToken = false
+            let isTokenLaunched = false
             let loading = false
+            let isKickstart = false
+            let isKickstartLaunched = false
             let failed = reservationObj.confirmations < 0 ? true : false
             
             if (identities[chainTicker] && transactions[chainTicker]) {
@@ -151,35 +141,48 @@ export const DashboardRenderTable = function() {
               loading = true
             }
 
-            if(reservationObj.tokenState)
-              if(reservationObj.tokenState === 1)
-                isToken =true
+   factory: if(reservationObj.extra){
+              if(reservationObj.extra.type === "SIMPLETOKEN"){ 
+                  
+                   isToken = true
 
-            if(reservationObj.confirmations > 0 && !loading && !isUsed && !failed && !this.state.factoryIDBusy && reservationObj.amount)
-            { 
-              this.openRegisterIdentityModal(reservationObj)
+                  if(reservationObj.extra.tokenState === 1){
+                    isTokenLaunched = true
+                    break factory;
+                  } else if(reservationObj.confirmations > 0 && !loading && !isUsed && !failed && !this.state.factoryIDBusy && reservationObj.extra){
+                      this.openRegisterIdentityModal(reservationObj)
+
+                  } else if(!this.state.factoryLaunchBusy && isUsed && !isTokenLaunched){
+                    this.openLaunchSimpleTokenModal(reservationObj);
+                    this.getFactoryIDBusy(true )
+                    this.getFactoryLaunchBusy(true )
+                    
+                  }
+
+                } else if(reservationObj.extra.type === "SIMPLEKICKSTART"){
+
+                  isKickstart =  true
+
+                  if(reservationObj.extra.tokenState === 1){
+                    isKickstartLaunched = true
+                    break factory;
+    
+                  } else if(reservationObj.confirmations > 0 && !loading && !isUsed && !failed && !this.state.factoryIDBusy && reservationObj.extra){
+                     this.openRegisterIdentityModal(reservationObj)
+
+                  } else if(!this.state.factoryLaunchBusy && isUsed  && !isKickstartLaunched){
+                    this.openLaunchSimpleKickstartModal(reservationObj);
+                    this.getFactoryIDBusy(true )
+                    this.getFactoryLaunchBusy(true )
+                  }
+               } 
             }
-            if(this.state.factoryIDBusy && reservationObj.txid === this.state.factorytxid && !isUsed && reservationObj.amount)
-               { loading =true;}
 
-            if(!this.state.factoryIDBusy && isUsed && reservationObj.amount && reservationObj.txid != this.state.factorytxid ){
-              this.setState({ factoryIDBusy: true })
-              this.setState({ factorytxid: reservationObj.txid }) 
-
-            } 
-
-            
-            if(this.state.factoryIDBusy && !this.state.factoryLaunchbusy && reservationObj.txid === this.state.factorytxid && isUsed && reservationObj.amount && !isToken)
-            {
-
-              this.openLaunchSimpleTokenModal(reservationObj);
-              this.setState({ factoryLaunchbusy: true })
-              this.setState({ factorytxid: reservationObj.txid }) 
+            if(this.state.factoryIDBusy && reservationObj.txid === this.state.factorytxid && !isUsed && reservationObj.extra){ 
+              loading =true
             }
 
-
-
-            if(!reservationObj.amount)
+            if(!reservationObj.extra)
                 return null
             return (
               <tr
@@ -204,7 +207,7 @@ export const DashboardRenderTable = function() {
                 <td style={{ borderTop: 0 }}>
                   <h3
                     className={`d-lg-flex align-items-lg-center coin-type ${
-                      isToken ? "green" :
+                      isTokenLaunched || isKickstartLaunched ? "green" :
                       reservationObj.confirmations == null || isUsed || loading
                         ? "native"
                         : failed
@@ -224,10 +227,12 @@ export const DashboardRenderTable = function() {
                   >
                     {loading
                       ? "Processing... Please Wait a few minutes"
-                      : isToken
+                      : isTokenLaunched
                       ? "Token Launched"
+                      : isKickstartLaunched
+                      ? "Kickstart Launched"
                       : isUsed
-                      ? "Ready to Launch Token"
+                      ? "Ready to Launch"
                       : failed
                       ? "Failed"
                       : reservationObj.confirmations != null &&
@@ -242,7 +247,11 @@ export const DashboardRenderTable = function() {
                     borderTop: 0,
                   }}
                 >
-                  {"Simple Token"}
+                  {isKickstart 
+                   ? "Simple Kickstart" 
+                   : isToken
+                   ? "Simple Token"
+                   : null }
                 </td>
                 <td style={{ borderTop: 0 }}>
                   <Tooltip title="Untrack">

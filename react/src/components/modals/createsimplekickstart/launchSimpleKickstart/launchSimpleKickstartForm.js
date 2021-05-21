@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { 
-    launchSimpleTokenFormRender
-} from './launchSimpleTokenForm.render';
+    launchSimpleKickstartFormRender
+} from './launchSimpleKickstartForm.render';
 import {
   WARNING_SNACK,
   TXDATA_STATUS,
@@ -14,18 +14,20 @@ import {
   ERROR_INVALID_ID,
   ENTER_DATA,
   LONG_ALERT,
-  CREATE_SIMPLE_TOKEN
+  CREATE_SIMPLE_KICKSTART
 } from "../../../../util/constants/componentConstants";
 import { newSnackbar } from '../../../../actions/actionCreators';
 import { checkAddrValidity } from '../../../../util/addrUtils';
 
-class launchSimpleTokenForm extends React.Component {
+class launchSimpleKickstartForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       name: "",
-      amount: "",
-      simple_addresses: "",
+      extra: { min_amount : 0,
+        max_amount : 0,
+        receiveaddress :''
+        },              //TODO define more params for the kickstarter in here
       formErrors: {
         name: [],
         primaryAddress: [],
@@ -47,12 +49,12 @@ class launchSimpleTokenForm extends React.Component {
   }
 
   handleRender() {
+   setTimeout(() => {
+      this.props.advanceFormStep_trigger()
+    }, 1500);
     setTimeout(() => {
       this.props.advanceFormStep_trigger()
-    }, 2000);
-    setTimeout(() => {
-      this.props.advanceFormStep_trigger()
-    }, 3000);
+    }, 2500);
   }
 
   componentWillMount() {
@@ -71,10 +73,8 @@ class launchSimpleTokenForm extends React.Component {
   }
 
   initFormData() {
-   const { namereservation, extra } 
+   const { namereservation, extra} 
    = this.props.nameCommitmentObj;
-
-   const { amount, simple_addresses } = extra
 
     const {
       name
@@ -83,8 +83,7 @@ class launchSimpleTokenForm extends React.Component {
     this.setState(
       {
         name: `${name}@`,
-        amount: amount,
-        simple_addresses: simple_addresses
+        extra
       },
       () => {
         this.updateFormErrors(this.updateFormData);
@@ -117,8 +116,7 @@ class launchSimpleTokenForm extends React.Component {
     const {
       chainTicker,
       name,
-      simple_addresses,
-      amount,
+      extra,
       resulttxid,
       warnings
     } = txData;
@@ -126,11 +124,11 @@ class launchSimpleTokenForm extends React.Component {
     let txDataSchema = {
       ["Status:"]: formStep === CONFIRM_DATA ? null : txData[TXDATA_STATUS],
       ["Error:"]: txData[TXDATA_ERROR],
-      ["Token Name:"]: name,
+      ["Kickstart Name:"]: name,
       ["Chain:"]: chainTicker,
       ["Transaction ID:"]: resulttxid,
-      ["Allocation Address:"]: simple_addresses,
-      ["Amount of Tokens:"]: amount
+      ["Allocation Address:"]: extra,
+      ["Amount of Kickstarts:"]: extra   // TODO
     };
 
     Object.keys(txDataSchema).forEach(txDataKey => {
@@ -159,17 +157,6 @@ class launchSimpleTokenForm extends React.Component {
     };
 
 
-    if (
-      name != null &&
-      name.length > 0 &&
-      name[name.length - 1] !== "@" &&
-      name[0] !== "i"
-    ) {
-      formErrors.name.push(ERROR_INVALID_ID);
-    }
-
-    //TODO: ID & name validation
-
     this.setState({ formErrors }, () => {
       setContinueDisabled(
         !Object.keys(this.state.formErrors).every(formInput => {
@@ -194,29 +181,28 @@ class launchSimpleTokenForm extends React.Component {
 
   updateFormData() {
     const { chainTicker } = this.props
-    const { name, amount, simple_addresses } = this.state
+    const { name, extra } = this.state
 
     this.props.setFormData({
       chainTicker,
       name,
-      amount,
-      simple_addresses
+      extra
     });
   }
 
   render() {
-    return launchSimpleTokenFormRender.call(this);
+    return launchSimpleKickstartFormRender.call(this);
   }
 }
 
 const mapStateToProps = (state) => {
-  const { chainTicker } = state.modal[CREATE_SIMPLE_TOKEN]
+  const { chainTicker } = state.modal[CREATE_SIMPLE_KICKSTART]
 
   return {
-    identity: state.modal[CREATE_SIMPLE_TOKEN].identity,
+    identity: state.modal[CREATE_SIMPLE_KICKSTART].identity,
     addresses: state.ledger.addresses,
     activeCoin: state.coins.activatedCoins[chainTicker],
   };
 };
 
-export default connect(mapStateToProps)(launchSimpleTokenForm);
+export default connect(mapStateToProps)(launchSimpleKickstartForm);
