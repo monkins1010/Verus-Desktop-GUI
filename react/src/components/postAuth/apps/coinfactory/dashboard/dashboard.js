@@ -8,6 +8,7 @@ import Store from '../../../../../store'
 import {
   CREATE_SIMPLE_TOKEN,
   CREATE_SIMPLE_KICKSTART,
+  CREATE_ADVANCED_CURRENCY,
   NATIVE,
   API_REGISTER_SIMPLE_TOKEN_ID,
   ID_POSTFIX,
@@ -18,7 +19,8 @@ import {
   API_CREATE_SIMPLE_TOKEN,
   API_GET_IDENTITIES,
   API_CREATE_SIMPLE_KICKSTART,
-  API_LAUNCH_SIMPLE_KICKSTART
+  API_LAUNCH_SIMPLE_KICKSTART,
+  API_CREATE_ADVANCED_CURRENCY
 } from "../../../../../util/constants/componentConstants";
 import { openModal } from '../../../../../actions/actionDispatchers';
 
@@ -135,6 +137,14 @@ class Dashboard extends React.Component {
     if(this.factoryIDBusy && !this.factoryLaunchBusy)
     this.setState({ factoryLaunchBusy: true })
       openModal(CREATE_SIMPLE_KICKSTART, { modalType: API_LAUNCH_SIMPLE_KICKSTART, chainTicker: nameCommitmentObj.chainTicker, nameCommitmentObj })
+  }
+
+  //************Advnaced definecurrency**************
+
+  openAdvancedCurrencyModal(chainTicker, commitmentData = null) {
+
+      openModal(CREATE_ADVANCED_CURRENCY, { modalType: API_CREATE_ADVANCED_CURRENCY, chainTicker, commitmentData })
+    
   }
 
   compileCommits() {

@@ -79,6 +79,28 @@ export const DashboardRender = function() {
               </a>
               
         </div>
+        <div style={{ display: "flex", alignItems: "center",padding: 4, flexWrap: "wrap", marginTop: 10 }}>
+      <button
+        className="btn btn-primary"
+        type="button"
+        style={{
+          fontSize: 14,
+          backgroundColor: "rgb(49, 101, 212)",
+          borderWidth: 1,
+          borderColor: "rgb(49, 101, 212)",
+          width : '152px'
+        }}
+        onClick={ () => this.openAdvancedCurrencyModal(identityChains[0])}
+       >
+        {"Advanced"}
+      </button>
+              <a  style={{ marginLeft: "5px"}}>
+                                 
+                    {"Create an advanced Currency or PBaaS Chain"}
+                                 
+              </a>
+              
+        </div>
      { this.state.displayNameCommitments.length > 0 ? DashboardRenderTable.call(this) : <SimpleLoader size={75} text={"Loading Blockchain..."}/> }
       </WalletPaper>
 

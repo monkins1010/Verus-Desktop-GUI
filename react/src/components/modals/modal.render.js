@@ -19,7 +19,8 @@ import {
   BASIC_MODAL,
   SPLIT_MODAL,
   CONVERT_CURRENCY,
-  CHAIN_OPTIONS
+  CHAIN_OPTIONS,
+  CREATE_ADVANCED_CURRENCY
 } from "../../util/constants/componentConstants";
 import AddCoin from "./addCoin/addCoin";
 import ChainInfo from "./chainInfo/chainInfo";
@@ -41,6 +42,7 @@ import SignVerifyIdData from "./signVerifyIdData/signVerifyIdData";
 import ShieldCoinbase from "./shieldCoinbase/shieldCoinbase";
 import { BasicModalRender } from "./modalTypes/basicModal.render";
 import { SplitModalRender } from "./modalTypes/splitModal.render";
+import CreateAdvancedCurrency from "./createadvancedcurrency/createAdvancedCurrency";
 
 export const ModalRender = function() {
   const COMPONENT_PROPS = {
@@ -117,6 +119,11 @@ export const ModalRender = function() {
     ),
     [CREATE_SIMPLE_KICKSTART]: (
       <CreateSimpleKickstart
+        {...COMPONENT_PROPS}
+      />
+    ),
+    [CREATE_ADVANCED_CURRENCY]: (
+      <CreateAdvancedCurrency
         {...COMPONENT_PROPS}
       />
     ),

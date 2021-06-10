@@ -81,6 +81,7 @@ export const API_CREATE_SIMPLE_KICKSTART_PREFLIGHT = 'create_simple_kickstart_pr
 export const API_LAUNCH_SIMPLE_KICKSTART = 'launch_simple_kickstart'
 export const API_LAUNCH_SIMPLE_KICKSTART_PREFLIGHT = 'launch_simple_kickstart_preflight'
 export const API_REGISTER_SIMPLE_KICKSTART_ID = 'register_simple_kickstart_id'
+export const API_CREATE_ADVANCED_CURRENCY = 'create_advanced_currency'
 
 // Non-blockchain API call paths
 export const LOAD_USERS = 'users/load'
@@ -227,6 +228,9 @@ export const CONVERT_CURRENCY = 'convert_currency'
 
 // Kickstarter Modals
 export const CREATE_SIMPLE_KICKSTART = 'create_simple_kickstart'
+
+// Define Currency Modal
+export const CREATE_ADVANCED_CURRENCY = 'create_advanced_currency'
 
 // Coin object data
 export const DEFAULT_DUST_THRESHOLD = 0.00001
