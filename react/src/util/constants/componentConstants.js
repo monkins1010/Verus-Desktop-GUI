@@ -76,11 +76,11 @@ export const API_CREATE_SIMPLE_TOKEN_PREFLIGHT = 'create_simple_token_preflight'
 export const API_LAUNCH_SIMPLE_TOKEN = 'launch_simple_token'
 export const API_LAUNCH_SIMPLE_TOKEN_PREFLIGHT = 'launch_simple_token_preflight'
 export const API_REGISTER_SIMPLE_TOKEN_ID = 'register_simple_token_id'
-export const API_CREATE_SIMPLE_KICKSTART = 'create_simple_kickstart'
-export const API_CREATE_SIMPLE_KICKSTART_PREFLIGHT = 'create_simple_kickstart_preflight'
-export const API_LAUNCH_SIMPLE_KICKSTART = 'launch_simple_kickstart'
-export const API_LAUNCH_SIMPLE_KICKSTART_PREFLIGHT = 'launch_simple_kickstart_preflight'
-export const API_REGISTER_SIMPLE_KICKSTART_ID = 'register_simple_kickstart_id'
+export const API_CREATE_SIMPLE_CROWDFUND = 'create_simple_crowdfund'
+export const API_CREATE_SIMPLE_CROWDFUND_PREFLIGHT = 'create_simple_crowdfund_preflight'
+export const API_LAUNCH_SIMPLE_CROWDFUND = 'launch_simple_crowdfund'
+export const API_LAUNCH_SIMPLE_CROWDFUND_PREFLIGHT = 'launch_simple_crowdfund_preflight'
+export const API_REGISTER_SIMPLE_CROWDFUND_ID = 'register_simple_crowdfund_id'
 export const API_CREATE_ADVANCED_CURRENCY = 'create_advanced_currency'
 
 // Non-blockchain API call paths
@@ -226,8 +226,8 @@ export const CONFIGURE = 'configure'
 export const IMMATURE_DETAILS = 'immature_details'
 export const CONVERT_CURRENCY = 'convert_currency'
 
-// Kickstarter Modals
-export const CREATE_SIMPLE_KICKSTART = 'create_simple_kickstart'
+// crowdfund Modals
+export const CREATE_SIMPLE_CROWDFUND = 'create_simple_crowdfund'
 
 // Define Currency Modal
 export const CREATE_ADVANCED_CURRENCY = 'create_advanced_currency'
@@ -415,7 +415,7 @@ export const ERROR_INVALID_Z_ADDR = 'Invalid private address'
 
 //Create Simple Token form errors
 export const ERROR_TOKEN_NAME_REQUIRED = 'A Token name is required'
-export const ERROR_KICKSTART_NAME_REQUIRED = 'A Kickstart name is required'
+export const ERROR_CROWDFUND_NAME_REQUIRED = 'A crowdfund name is required'
 
 // Create identity defaults
 export const DEFAULT_REFERRAL_IDS = {
@@ -434,7 +434,7 @@ export const MS_MERGE_MINING_STAKING = 'merge_mining_staking'
 // Token Factory States
 export const TF_COMMITMENT = 0
 export const TF_SIMPLE_TOKEN = 1
-export const TF_SIMPLE_KICKSTART = 2
+export const TF_SIMPLE_CROWDFUND = 2
 
 // FActory JSON types
 

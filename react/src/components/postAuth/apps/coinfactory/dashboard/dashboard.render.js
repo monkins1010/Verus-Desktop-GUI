@@ -68,13 +68,13 @@ export const DashboardRender = function() {
           borderColor: "rgb(49, 101, 212)",
           width : '152px'
         }}
-        onClick={ () => this.openSimpleKickstartModal(identityChains[0])}
+        onClick={ () => this.openSimplecrowdfundModal(identityChains[0])}
        >
-        {"Create Kickstarter"}
+        {"Create crowdfund"}
       </button>
               <a  style={{ marginLeft: "5px"}}>
                                  
-                    {"Create a kickstarter campaign to fund your project"}
+                    {"Create a crowdfund campaign to fund your project"}
                                  
               </a>
               
@@ -128,8 +128,8 @@ export const DashboardRenderTable = function() {
             let isToken = false
             let isTokenLaunched = false
             let loading = false
-            let isKickstart = false
-            let isKickstartLaunched = false
+            let iscrowdfund = false
+            let iscrowdfundLaunched = false
             let failed = reservationObj.confirmations < 0 ? true : false
             
             if (identities[chainTicker] && transactions[chainTicker]) {
@@ -181,19 +181,19 @@ export const DashboardRenderTable = function() {
                     
                   }
 
-                } else if(reservationObj.extra.type === "SIMPLEKICKSTART"){
+                } else if(reservationObj.extra.type === "SIMPLECROWDFUND"){
 
-                  isKickstart =  true
+                  iscrowdfund =  true
 
                   if(reservationObj.extra.tokenState === 1){
-                    isKickstartLaunched = true
+                    iscrowdfundLaunched = true
                     break factory;
     
                   } else if(reservationObj.confirmations > 0 && !loading && !isUsed && !failed && !this.state.factoryIDBusy && reservationObj.extra){
                      this.openRegisterIdentityModal(reservationObj)
 
-                  } else if(!this.state.factoryLaunchBusy && isUsed  && !isKickstartLaunched){
-                    this.openLaunchSimpleKickstartModal(reservationObj);
+                  } else if(!this.state.factoryLaunchBusy && isUsed  && !iscrowdfundLaunched){
+                    this.openLaunchSimplecrowdfundModal(reservationObj);
                     this.getFactoryIDBusy(true )
                     this.getFactoryLaunchBusy(true )
                   }
@@ -229,7 +229,7 @@ export const DashboardRenderTable = function() {
                 <td style={{ borderTop: 0 }}>
                   <h3
                     className={`d-lg-flex align-items-lg-center coin-type ${
-                      isTokenLaunched || isKickstartLaunched ? "green" :
+                      isTokenLaunched || iscrowdfundLaunched ? "green" :
                       reservationObj.confirmations == null || isUsed || loading
                         ? "native"
                         : failed
@@ -251,8 +251,8 @@ export const DashboardRenderTable = function() {
                       ? "Processing... Please Wait a few minutes"
                       : isTokenLaunched
                       ? "Token Launched"
-                      : isKickstartLaunched
-                      ? "Kickstart Launched"
+                      : iscrowdfundLaunched
+                      ? "crowdfund Launched"
                       : isUsed
                       ? "Ready to Launch"
                       : failed
@@ -269,8 +269,8 @@ export const DashboardRenderTable = function() {
                     borderTop: 0,
                   }}
                 >
-                  {isKickstart 
-                   ? "Simple Kickstart" 
+                  {iscrowdfund 
+                   ? "Simple crowdfund" 
                    : isToken
                    ? "Simple Token"
                    : null }

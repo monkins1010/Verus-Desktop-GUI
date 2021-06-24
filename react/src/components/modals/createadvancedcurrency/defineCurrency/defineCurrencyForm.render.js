@@ -52,17 +52,17 @@ export const DefineCurrencyFormEnterRender = function() {
        <SuggestionInput
       //  error={formErrors.simple_addresses.length > 0}
       //  helperText={formErrors.simple_addresses ? formErrors.simple_addresses[0] : null}
-        label="Enter name of Currency or PBaaS Chain"
+        label="Choose the name of Currency or PBaaS Chain"
         items={identities.map((id) => `${id.identity.name}`)}
         variant="outlined"
         onChange={updateInput}
         name="name"
         value={name}
-        containerStyle={{ marginTop: 50, width: "95%" }}
+        containerStyle={{ marginTop: 90, width: "95%" }}
       />
       <div className="col-xs-12 margin-top-20 backround-gray" style={{display : 'inline-block', padding: '5px'}}>
         {this.createCheckboxes()}
-        </div>
+      </div>
       <SuggestionInput
         value={referralId}
         name="referralId"
@@ -110,7 +110,7 @@ export const DefineCurrencyFormEnterRender = function() {
        <TextField
        // error={formErrors.amount.length > 0}
       //  helperText={formErrors.amount ? formErrors.amount[0] : null}
-        label={`Enter the blockheight when then the kickstart should launch`}
+        label={`Enter the blockheight when then the crowdfund should launch`}
         value={blockheight}
         onChange={updateInput}
         variant="outlined"

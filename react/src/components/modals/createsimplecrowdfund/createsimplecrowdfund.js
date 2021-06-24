@@ -1,10 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import {
-  CreateSimpleKickstartRender
-} from './createsimpleKickstart.render';
+  CreateSimplecrowdfundRender
+} from './createsimplecrowdfund.render';
 import {
-  CREATE_SIMPLE_KICKSTART,
+  CREATE_SIMPLE_CROWDFUND,
   ENTER_DATA,
   API_SUCCESS,
   ERROR_SNACK,
@@ -18,31 +18,31 @@ import {
   API_GET_IDENTITIES,
   MID_LENGTH_ALERT,
   NATIVE,
-  API_REGISTER_SIMPLE_KICKSTART_ID,
+  API_REGISTER_SIMPLE_CROWDFUND_ID,
   DEFAULT_REFERRAL_IDS,
-  API_CREATE_SIMPLE_KICKSTART,
-  API_LAUNCH_SIMPLE_KICKSTART
+  API_CREATE_SIMPLE_CROWDFUND,
+  API_LAUNCH_SIMPLE_CROWDFUND
 } from "../../../util/constants/componentConstants";
-import { registerIdNameForFactory, registerId, launchSimpleKickstart } from '../../../util/api/wallet/walletCalls';
+import { registerIdNameForFactory, registerId, launchSimplecrowdfund } from '../../../util/api/wallet/walletCalls';
 import { newSnackbar, expireData } from '../../../actions/actionCreators';
 import { conditionallyUpdateWallet } from '../../../actions/actionDispatchers';
 import Store from '../../../store'
 
-class CreateSimpleKickstart extends React.Component {
+class CreateSimplecrowdfund extends React.Component {
   constructor(props) {
     super(props);
     const { activeCoin } = props
     const { name } = activeCoin
 
     switch (props.modalProps.modalType) {
-      case API_CREATE_SIMPLE_KICKSTART:
-        props.setModalHeader(`Create Simple Kickstart on ${name} Blockchain`)
+      case API_CREATE_SIMPLE_CROWDFUND:
+        props.setModalHeader(`Create Simple crowdfund on ${name} Blockchain`)
         break;
-      case API_LAUNCH_SIMPLE_KICKSTART:
-          props.setModalHeader(`Launch Simple Kickstart on ${name} Blockchain called ${props.modalProps.nameCommitmentObj.namereservation.name}`)
+      case API_LAUNCH_SIMPLE_CROWDFUND:
+          props.setModalHeader(`Launch Simple crowdfund on ${name} Blockchain called ${props.modalProps.nameCommitmentObj.namereservation.name}`)
           break;
-      case API_REGISTER_SIMPLE_KICKSTART_ID:
-        props.setModalHeader(`Create ${name} ID for Kickstart of the same name: ${props.modalProps.nameCommitmentObj.namereservation.name}@`)
+      case API_REGISTER_SIMPLE_CROWDFUND_ID:
+        props.setModalHeader(`Create ${name} ID for crowdfund of the same name: ${props.modalProps.nameCommitmentObj.namereservation.name}@`)
         break;
       default:
         break;
@@ -112,7 +112,7 @@ class CreateSimpleKickstart extends React.Component {
             ? null
             : privateAddress;
 
-        if (modalProps.modalType === API_CREATE_SIMPLE_KICKSTART) {
+        if (modalProps.modalType === API_CREATE_SIMPLE_CROWDFUND) {
             _txData = await registerIdNameForFactory(
               !formStep,
               chainTicker,
@@ -123,7 +123,7 @@ class CreateSimpleKickstart extends React.Component {
               this.selectReferralIdentity(referralId),
               extra
             );
-          } else if (modalProps.modalType === API_REGISTER_SIMPLE_KICKSTART_ID) {
+          } else if (modalProps.modalType === API_REGISTER_SIMPLE_CROWDFUND_ID) {
             _txData = await registerId(
               !formStep,
               chainTicker,
@@ -139,8 +139,8 @@ class CreateSimpleKickstart extends React.Component {
               null,
               this.selectReferralIdentity(referralId)
             );
-        } else if (modalProps.modalType === API_LAUNCH_SIMPLE_KICKSTART) {
-            _txData = await launchSimpleKickstart(
+        } else if (modalProps.modalType === API_LAUNCH_SIMPLE_CROWDFUND) {
+            _txData = await launchSimplecrowdfund(
               !formStep,
               chainTicker,
               name,
@@ -152,25 +152,25 @@ class CreateSimpleKickstart extends React.Component {
         if (_txData.msg === API_SUCCESS) {
           this.setState({ loadingProgress: 100 }, () => {
             if (formStep === CONFIRM_DATA) {
-             if (modalProps.modalType === API_REGISTER_SIMPLE_KICKSTART_ID) {
+             if (modalProps.modalType === API_REGISTER_SIMPLE_CROWDFUND_ID) {
                 this.props.dispatch(
                   newSnackbar(
                     INFO_SNACK,
                     `ID Mined onto the blockchain, please wait for ID to get confirmed.`
                   )
                 );
-              } else if (modalProps.modalType === API_CREATE_SIMPLE_KICKSTART) {
+              } else if (modalProps.modalType === API_CREATE_SIMPLE_CROWDFUND) {
                 this.props.dispatch(
                   newSnackbar(
                     INFO_SNACK,
-                    `Simple Kickstart ID Name committed. Please wait a few minutes for it to get confirmed`
+                    `Simple crowdfund ID Name committed. Please wait a few minutes for it to get confirmed`
                   )
                 );
-              } else if (modalProps.modalType === API_LAUNCH_SIMPLE_KICKSTART) {
+              } else if (modalProps.modalType === API_LAUNCH_SIMPLE_CROWDFUND) {
                 this.props.dispatch(
                   newSnackbar(
                     SUCCESS_SNACK,
-                    `Simple Kickstart Launching. Please wait up to 20 minutes for Kickstart to launch!`
+                    `Simple crowdfund Launching. Please wait up to 20 minutes for crowdfund to launch!`
                   )
                 );
               } 
@@ -180,9 +180,9 @@ class CreateSimpleKickstart extends React.Component {
               this.props.dispatch(expireData(this.props.activeCoin.id, API_GET_BALANCES))
               this.props.dispatch(expireData(this.props.activeCoin.id, API_GET_NAME_COMMITMENTS))
               this.props.dispatch(expireData(this.props.activeCoin.id, API_GET_IDENTITIES))
-              this.props.dispatch(expireData(this.props.activeCoin.id, API_LAUNCH_SIMPLE_KICKSTART))
-              this.props.dispatch(expireData(this.props.activeCoin.id, API_CREATE_SIMPLE_KICKSTART))
-              this.props.dispatch(expireData(this.props.activeCoin.id, API_REGISTER_SIMPLE_KICKSTART_ID))
+              this.props.dispatch(expireData(this.props.activeCoin.id, API_LAUNCH_SIMPLE_CROWDFUND))
+              this.props.dispatch(expireData(this.props.activeCoin.id, API_CREATE_SIMPLE_CROWDFUND))
+              this.props.dispatch(expireData(this.props.activeCoin.id, API_REGISTER_SIMPLE_CROWDFUND_ID))
               conditionallyUpdateWallet(Store.getState(), this.props.dispatch, NATIVE, this.props.activeCoin.id, API_GET_TRANSACTIONS)
               conditionallyUpdateWallet(Store.getState(), this.props.dispatch, NATIVE, this.props.activeCoin.id, API_GET_NAME_COMMITMENTS)
             }
@@ -190,12 +190,12 @@ class CreateSimpleKickstart extends React.Component {
             this.setState({ loading: false, txData: {status: API_SUCCESS, ..._txData.result}, formStep: formStep + 1 })
           })
         } else {
-          if (modalProps.modalType === API_REGISTER_SIMPLE_KICKSTART_ID) {
+          if (modalProps.modalType === API_REGISTER_SIMPLE_CROWDFUND_ID) {
             this.props.dispatch(newSnackbar(ERROR_SNACK, "Error creating ID."))
-          } else if (modalProps.modalType === API_CREATE_SIMPLE_KICKSTART) {
-            this.props.dispatch(newSnackbar(ERROR_SNACK, "Error creating Kickstart."))
-          } else if (modalProps.modalType === API_LAUNCH_SIMPLE_KICKSTART) {
-            this.props.dispatch(newSnackbar(ERROR_SNACK, "Error Launching Kickstart."))
+          } else if (modalProps.modalType === API_CREATE_SIMPLE_CROWDFUND) {
+            this.props.dispatch(newSnackbar(ERROR_SNACK, "Error creating crowdfund."))
+          } else if (modalProps.modalType === API_LAUNCH_SIMPLE_CROWDFUND) {
+            this.props.dispatch(newSnackbar(ERROR_SNACK, "Error Launching crowdfund."))
           } 
 
           throw new Error(_txData.result)
@@ -213,19 +213,19 @@ class CreateSimpleKickstart extends React.Component {
   }
 
   render() {
-    return CreateSimpleKickstartRender.call(this);
+    return CreateSimplecrowdfundRender.call(this);
   }
 }
 
 const mapStateToProps = (state) => {
-  const { chainTicker } = state.modal[CREATE_SIMPLE_KICKSTART]
+  const { chainTicker } = state.modal[CREATE_SIMPLE_CROWDFUND]
 
   return {
     activeCoin: state.coins.activatedCoins[chainTicker],
     balances: state.ledger.balances[chainTicker],
     addresses: state.ledger.addresses[chainTicker],
-    modalProps: state.modal[CREATE_SIMPLE_KICKSTART]
+    modalProps: state.modal[CREATE_SIMPLE_CROWDFUND]
   };
 };
 
-export default connect(mapStateToProps)(CreateSimpleKickstart);
+export default connect(mapStateToProps)(CreateSimplecrowdfund);

@@ -6,7 +6,7 @@ import { ENTER_DATA, DEFAULT_REFERRAL_IDS, INFO_SNACK } from '../../../../util/c
 import SuggestionInput from '../../../../containers/SuggestionInput/SuggestionInput'
 import { InputAdornment } from '@material-ui/core';
 
-export const SimpleKickstartFormRender = function() {
+export const SimplecrowdfundFormRender = function() {
   const { formStep } = this.props
   return (
     <div
@@ -22,7 +22,7 @@ export const SimpleKickstartFormRender = function() {
         overflowY: "scroll"
       }}
     >
-      { this.props.formStep === ENTER_DATA ? SimpleKickstartEnterRender.call(this) : CommitNameTxDataRender.call(this) }
+      { this.props.formStep === ENTER_DATA ? SimplecrowdfundEnterRender.call(this) : CommitNameTxDataRender.call(this) }
     </div>
   );
 }
@@ -37,7 +37,7 @@ export const CommitNameTxDataRender = function() {
   )
 }
 
-export const SimpleKickstartEnterRender = function() {
+export const SimplecrowdfundEnterRender = function() {
   const { state, updateInput, props } = this
   const { name, referralId, formErrors, min_amount, receiveamount,  max_amount, receiveaddress, blockheight } = state;
   const { identities, activeCoin, info } = props
@@ -49,7 +49,7 @@ export const SimpleKickstartEnterRender = function() {
       <TextField
         error={formErrors.name.length > 0}
         helperText={formErrors.name ? formErrors.name[0] : null}
-        label="Enter name of Kickstart project (This will also become an Identity)"
+        label="Enter name of crowdfund project (This will also become an Identity)"
         variant="outlined"
         onChange={updateInput}
         name="name"
@@ -112,7 +112,7 @@ export const SimpleKickstartEnterRender = function() {
        <TextField
        // error={formErrors.amount.length > 0}
       //  helperText={formErrors.amount ? formErrors.amount[0] : null}
-        label={`Enter the blockheight when then the kickstart should launch`}
+        label={`Enter the blockheight when then the crowdfund should launch`}
         value={blockheight}
         onChange={updateInput}
         variant="outlined"

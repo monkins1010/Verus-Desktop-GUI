@@ -12,7 +12,7 @@ import {
   IMMATURE_DETAILS,
   CREATE_IDENTITY,
   CREATE_SIMPLE_TOKEN,
-  CREATE_SIMPLE_KICKSTART,
+  CREATE_SIMPLE_CROWDFUND,
   SIGN_VERIFY_ID_DATA,
   SHIELDCOINBASE,
   CURRENCY_INFO,
@@ -33,7 +33,7 @@ import ConvertCurrency from "./convertCurrency/convertCurrency";
 import SendCoin from "./sendCoin/sendCoin";
 import CreateIdentity from "./createIdentity/createIdentity";
 import CreateSimpleToken from "./createsimpletoken/createsimpletoken";
-import CreateSimpleKickstart from "./createsimplekickstart/createsimpleKickstart";
+import CreateSimplecrowdfund from "./createsimplecrowdfund/createsimplecrowdfund";
 import TxInfo from "./txInfo/txInfo";
 import ExportToCsv from "./exportToCsv/exportToCsv";
 import OperationInfo from "./operationInfo/operationInfo";
@@ -117,8 +117,8 @@ export const ModalRender = function() {
         {...COMPONENT_PROPS}
       />
     ),
-    [CREATE_SIMPLE_KICKSTART]: (
-      <CreateSimpleKickstart
+    [CREATE_SIMPLE_CROWDFUND]: (
+      <CreateSimplecrowdfund
         {...COMPONENT_PROPS}
       />
     ),

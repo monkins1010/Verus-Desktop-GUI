@@ -13,7 +13,7 @@ import {
   CREATE_IDENTITY,
   CREATE_ADVANCED_CURRENCY,
   ERROR_NAME_REQUIRED,
-  ERROR_KICKSTART_NAME_REQUIRED,
+  ERROR_CROWDFUND_NAME_REQUIRED,
   ERROR_INVALID_ID,
   ENTER_DATA,
   LONG_ALERT,
@@ -21,6 +21,7 @@ import {
 } from "../../../../util/constants/componentConstants";
 import { newSnackbar } from '../../../../actions/actionCreators';
 import { checkPublicAddress } from '../../../../util/addrUtils';
+
 
 const items = [
     'Fractional',
@@ -64,14 +65,26 @@ class DefineCurrencyForm extends React.Component {
 
 
     this.state = {
-      optionsisChecked: [false,false,false,false,false,false,false,false,false,false,false],
       addrList: addressListFormatted,
       name: '',
-      referralId: '',
+      optionsisChecked: {},
+      idReferralPrice: null,
+      idReferalLevels: null,
+      notariesforchain: '',
+      referralPrice: null,
+      referralPrice: null,
+      referralPrice: null,
+      referralPrice: null,
+      referralPrice: null,
+      referralPrice: null,
+      referralPrice: null,
+      referralPrice: null,
+      referralPrice: null,
+      referralPrice: null,
       primaryAddress: '',
       min_amount : 0,
       max_amount : 0,
-      receiveaddress : '', //TODO define more params for the kickstarter in here
+      receiveaddress : '', //TODO define more params for the crowdfund in here
       blockheight: 0,
       receiveamount: 0,
       formErrors: {
@@ -144,14 +157,14 @@ class DefineCurrencyForm extends React.Component {
       ["Chain:"]: txData.coin,
       ["Transaction ID:"]: txData[TXDATA_TXID],
       ["Control Address:"]: controlAddress,
-      ["Name of Kickstart to be created:"]: namereservation ? namereservation.name : null,
+      ["Name of crowdfund to be created:"]: namereservation ? namereservation.name : null,
       ["Name Address:"]: namereservation ? namereservation.nameid : null,
       ["Referral ID:"]: namereservation && namereservation.referral && namereservation.referral.length > 0 ? namereservation.referral : null,
-      ["Minimum amount before Kickstart Launches:"]: min_amount,
-      ["Maximum amount for Kickstart Launch:"]: max_amount,
+      ["Minimum amount before crowdfund Launches:"]: min_amount,
+      ["Maximum amount for crowdfund Launch:"]: max_amount,
       ["Blockheight Project to launch at"]: blockheight,
-      ["Addresses Kickstarts issued to:"]: receiveaddress,
-      ["Kickstart pre-allocation amount "]: receiveamount
+      ["Addresses crowdfunds issued to:"]: receiveaddress,
+      ["crowdfund pre-allocation amount "]: receiveamount
 
 
     };
@@ -179,7 +192,7 @@ class DefineCurrencyForm extends React.Component {
     }
 
     if (name != null && name.length == 0) {
-      formErrors.name.push(ERROR_KICKSTART_NAME_REQUIRED)
+      formErrors.name.push(ERROR_CROWDFUND_NAME_REQUIRED)
     }  
 
     if (
@@ -229,7 +242,7 @@ class DefineCurrencyForm extends React.Component {
       name,
       referralId,
       primaryAddress,
-      extra :{ min_amount, receiveamount,  max_amount, receiveaddress, blockheight, tokenState: 0, type: "SIMPLEKICKSTART"}
+      extra :{ min_amount, receiveamount,  max_amount, receiveaddress, blockheight, tokenState: 0, type: "SIMPLECROWDFUND"}
     });
   }
 

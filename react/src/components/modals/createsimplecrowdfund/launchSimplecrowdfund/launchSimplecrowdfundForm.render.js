@@ -3,7 +3,7 @@ import TextField from "@material-ui/core/TextField";
 import ObjectToTable from '../../../../containers/ObjectToTable/ObjectToTable'
 import { ENTER_DATA } from '../../../../util/constants/componentConstants';
 
-export const launchSimpleKickstartFormRender = function() {
+export const launchSimplecrowdfundFormRender = function() {
   const { formStep } = this.props
   return (
     <div
@@ -49,11 +49,11 @@ export const UpdateIdentityFormEnterRender = function() {
   return (
     <React.Fragment>
         <p>
-          Ready to Launch the Kickstart to the specified address, note this costs 200.0004 VRSC.  
+          Ready to Launch the crowdfund to the specified address, note this costs 200.0004 VRSC.  
        </p>
      
       <TextField
-        label="Name of Kickstart"
+        label="Name of crowdfund"
         variant="outlined"
         onChange={updateInput}
         name="name"

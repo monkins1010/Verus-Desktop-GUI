@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { 
-    launchSimpleKickstartFormRender
-} from './launchSimpleKickstartForm.render';
+    launchSimplecrowdfundFormRender
+} from './launchSimplecrowdfundForm.render';
 import {
   WARNING_SNACK,
   TXDATA_STATUS,
@@ -14,12 +14,12 @@ import {
   ERROR_INVALID_ID,
   ENTER_DATA,
   LONG_ALERT,
-  CREATE_SIMPLE_KICKSTART
+  CREATE_SIMPLE_CROWDFUND
 } from "../../../../util/constants/componentConstants";
 import { newSnackbar } from '../../../../actions/actionCreators';
 import { checkAddrValidity } from '../../../../util/addrUtils';
 
-class launchSimpleKickstartForm extends React.Component {
+class launchSimplecrowdfundForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -27,7 +27,7 @@ class launchSimpleKickstartForm extends React.Component {
       extra: { min_amount : 0,
         max_amount : 0,
         receiveaddress :''
-        },              //TODO define more params for the kickstarter in here
+        },              //TODO define more params for the crowdfund in here
       formErrors: {
         name: [],
         primaryAddress: [],
@@ -124,11 +124,11 @@ class launchSimpleKickstartForm extends React.Component {
     let txDataSchema = {
       ["Status:"]: formStep === CONFIRM_DATA ? null : txData[TXDATA_STATUS],
       ["Error:"]: txData[TXDATA_ERROR],
-      ["Kickstart Name:"]: name,
+      ["crowdfund Name:"]: name,
       ["Chain:"]: chainTicker,
       ["Transaction ID:"]: resulttxid,
       ["Allocation Address:"]: extra,
-      ["Amount of Kickstarts:"]: extra   // TODO
+      ["Amount of crowdfunds:"]: extra   // TODO
     };
 
     Object.keys(txDataSchema).forEach(txDataKey => {
@@ -191,18 +191,18 @@ class launchSimpleKickstartForm extends React.Component {
   }
 
   render() {
-    return launchSimpleKickstartFormRender.call(this);
+    return launchSimplecrowdfundFormRender.call(this);
   }
 }
 
 const mapStateToProps = (state) => {
-  const { chainTicker } = state.modal[CREATE_SIMPLE_KICKSTART]
+  const { chainTicker } = state.modal[CREATE_SIMPLE_CROWDFUND]
 
   return {
-    identity: state.modal[CREATE_SIMPLE_KICKSTART].identity,
+    identity: state.modal[CREATE_SIMPLE_CROWDFUND].identity,
     addresses: state.ledger.addresses,
     activeCoin: state.coins.activatedCoins[chainTicker],
   };
 };
 
-export default connect(mapStateToProps)(launchSimpleKickstartForm);
+export default connect(mapStateToProps)(launchSimplecrowdfundForm);

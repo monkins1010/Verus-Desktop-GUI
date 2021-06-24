@@ -7,7 +7,7 @@ import {
 import Store from '../../../../../store'
 import {
   CREATE_SIMPLE_TOKEN,
-  CREATE_SIMPLE_KICKSTART,
+  CREATE_SIMPLE_CROWDFUND,
   CREATE_ADVANCED_CURRENCY,
   NATIVE,
   API_REGISTER_SIMPLE_TOKEN_ID,
@@ -18,8 +18,8 @@ import {
   API_GET_CPU_TEMP,
   API_CREATE_SIMPLE_TOKEN,
   API_GET_IDENTITIES,
-  API_CREATE_SIMPLE_KICKSTART,
-  API_LAUNCH_SIMPLE_KICKSTART,
+  API_CREATE_SIMPLE_CROWDFUND,
+  API_LAUNCH_SIMPLE_CROWDFUND,
   API_CREATE_ADVANCED_CURRENCY
 } from "../../../../../util/constants/componentConstants";
 import { openModal } from '../../../../../actions/actionDispatchers';
@@ -126,17 +126,17 @@ class Dashboard extends React.Component {
 
   //************SImple Kick start**************
 
-  openSimpleKickstartModal(chainTicker, commitmentData = null) {
+  openSimplecrowdfundModal(chainTicker, commitmentData = null) {
     if(chainTicker || !this.factoryIDBusy)
     {
-      openModal(CREATE_SIMPLE_KICKSTART, { modalType: API_CREATE_SIMPLE_KICKSTART, chainTicker, commitmentData })
+      openModal(CREATE_SIMPLE_CROWDFUND, { modalType: API_CREATE_SIMPLE_CROWDFUND, chainTicker, commitmentData })
     }
   }
 
-  openLaunchSimpleKickstartModal(nameCommitmentObj) {
+  openLaunchSimplecrowdfundModal(nameCommitmentObj) {
     if(this.factoryIDBusy && !this.factoryLaunchBusy)
     this.setState({ factoryLaunchBusy: true })
-      openModal(CREATE_SIMPLE_KICKSTART, { modalType: API_LAUNCH_SIMPLE_KICKSTART, chainTicker: nameCommitmentObj.chainTicker, nameCommitmentObj })
+      openModal(CREATE_SIMPLE_CROWDFUND, { modalType: API_LAUNCH_SIMPLE_CROWDFUND, chainTicker: nameCommitmentObj.chainTicker, nameCommitmentObj })
   }
 
   //************Advnaced definecurrency**************

@@ -1,13 +1,13 @@
 import React from 'react';
-import SimpleKickstartForm from "../createsimplekickstart/simpleKickstartForm/simpleKickstartForm";
-import LaunchSimpleKickstartForm from "../createsimplekickstart/launchSimpleKickstart/launchSimpleKickstartForm";
+import SimplecrowdfundForm from "../createsimplecrowdfund/simplecrowdfundForm/simplecrowdfundForm";
+import LaunchSimplecrowdfundForm from "../createsimplecrowdfund/launchSimplecrowdfund/launchSimplecrowdfundForm";
 import RegisterSimpleTokenIdentityForm from "../createsimpletoken/registerSimpleToken/registerSimpleTokenForm";
-import { CONFIRM_DATA, API_SUCCESS, SEND_RESULT, API_REGISTER_SIMPLE_KICKSTART_ID, API_CREATE_SIMPLE_KICKSTART, API_LAUNCH_SIMPLE_KICKSTART } from '../../../util/constants/componentConstants';
+import { CONFIRM_DATA, API_SUCCESS, SEND_RESULT, API_REGISTER_SIMPLE_CROWDFUND_ID, API_CREATE_SIMPLE_CROWDFUND, API_LAUNCH_SIMPLE_CROWDFUND } from '../../../util/constants/componentConstants';
 import Button from '@material-ui/core/Button';
 import SimpleLoader from '../../../containers/SimpleLoader/SimpleLoader'
 
 
-export const CreateSimpleKickstartRender = function() {
+export const CreateSimplecrowdfundRender = function() {
   const { advanceFormStep, state, back, props } = this
   const { loading, continueDisabled, formStep, txData } = state
   const { closeModal } = props
@@ -16,7 +16,7 @@ export const CreateSimpleKickstartRender = function() {
     <div style={{ width: "100%", paddingLeft: 35, paddingRight: 35 }}>
       {loading
         ? CreateIdentityRenderLoading.call(this)
-        : CreateSimpleKickstartFormRender.call(this)}
+        : CreateSimplecrowdfundFormRender.call(this)}
       {!loading && (
         <div
           style={{
@@ -55,11 +55,11 @@ export const CreateSimpleKickstartRender = function() {
   );
 }
 
-export const CreateSimpleKickstartFormRender = function() {
+export const CreateSimplecrowdfundFormRender = function() {
   const { state, props, getFormData, getContinueDisabled, advanceFormStep } = this;
   const { modalProps, closeModal } = props;
 
-  if (modalProps.modalType === API_REGISTER_SIMPLE_KICKSTART_ID) {
+  if (modalProps.modalType === API_REGISTER_SIMPLE_CROWDFUND_ID) {
     return (
       <RegisterSimpleTokenIdentityForm
         {...modalProps}
@@ -70,18 +70,18 @@ export const CreateSimpleKickstartFormRender = function() {
         closeModal_trigger={closeModal}
       />
     );
-  } else if (modalProps.modalType === API_CREATE_SIMPLE_KICKSTART) {
+  } else if (modalProps.modalType === API_CREATE_SIMPLE_CROWDFUND) {
     return (
-      <SimpleKickstartForm 
+      <SimplecrowdfundForm 
         {...modalProps}
         {...state}
         setFormData={getFormData}
         setContinueDisabled={getContinueDisabled}
       />
     )
-  } else if (modalProps.modalType === API_LAUNCH_SIMPLE_KICKSTART) {
+  } else if (modalProps.modalType === API_LAUNCH_SIMPLE_CROWDFUND) {
     return (
-      <LaunchSimpleKickstartForm 
+      <LaunchSimplecrowdfundForm 
         {...modalProps}
         {...state}
         setFormData={getFormData}
@@ -101,7 +101,7 @@ export const CreateIdentityRenderLoading = function() {
         className="d-flex d-sm-flex justify-content-center justify-content-sm-center"
         style={{ paddingBottom: 40 }}
       >
-        <SimpleLoader size={75} text={"Please wait while Kickstart launch transaction is confirmed..."}/>
+        <SimpleLoader size={75} text={"Please wait while crowdfund launch transaction is confirmed..."}/>
       </div>
     </div>
   )

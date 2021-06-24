@@ -5,8 +5,8 @@ import {
   NATIVE,
   API_LAUNCH_SIMPLE_TOKEN_PREFLIGHT,
   API_LAUNCH_SIMPLE_TOKEN,
-  API_LAUNCH_SIMPLE_KICKSTART,
-  API_LAUNCH_SIMPLE_KICKSTART_PREFLIGHT
+  API_LAUNCH_SIMPLE_CROWDFUND,
+  API_LAUNCH_SIMPLE_CROWDFUND_PREFLIGHT
 } from "../../../constants/componentConstants";
 
 export const registerIdNameForFactory = async (
@@ -73,7 +73,7 @@ export const registerIdNameForFactory = async (
   };
   
 
-  export const launchSimpleKickstart = async (
+  export const launchSimplecrowdfund = async (
     preflight,
     chainTicker,
     name,
@@ -84,7 +84,7 @@ export const registerIdNameForFactory = async (
     //  var options = 96; // token paramter to launch simple token
       return await getApiData(
         NATIVE,
-        preflight ? API_LAUNCH_SIMPLE_KICKSTART_PREFLIGHT : API_LAUNCH_SIMPLE_KICKSTART,
+        preflight ? API_LAUNCH_SIMPLE_CROWDFUND_PREFLIGHT : API_LAUNCH_SIMPLE_CROWDFUND,
         {
           chainTicker,
           name,
