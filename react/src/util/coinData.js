@@ -20,7 +20,7 @@ import {
   VERUSTEST_CONF_NAME,
   PIRATE_DAEMON
 } from './constants/componentConstants'
-import electrumServers from 'agama-wallet-lib/src/electrum-servers'
+import { electrum, general } from 'verus-wallet-endpoints'
 import networks from 'agama-wallet-lib/src/bitcoinjs-networks'
 import { fromSats } from 'agama-wallet-lib/src/utils'
 import komodoUtils from 'agama-wallet-lib/src/coin-helpers'
@@ -97,8 +97,8 @@ export const getCoinObj = (chainTicker, chainDefinition) => {
     }
 
     if (networks[chainTickerLc]) {
-      if (electrumServers.electrumServers[chainTickerLc]) {
-        available_modes[ELECTRUM] = true
+      if (electrum.servers[general.stopgap.assumeCurrencyId(chainTickerLc)]) {
+        available_modes[ELECTRUM] = true;
       }
 
       if (chainTickerUc !== 'KMD' && networks[chainTickerLc].isZcash) tags[IS_ZCASH] = true

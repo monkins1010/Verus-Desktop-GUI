@@ -1,5 +1,3 @@
-const { remote } = require('electron');
-
 var terminalText = ""
 
 if (window.module) {
@@ -21,7 +19,9 @@ function getURLParameter(sParam) {
 
 function startBootstrap() {
   const chainTicker = getURLParameter("ticker")
-  const bootstraps = remote.require('./routes/children/fetch-bootstrap/bootstraps/index')
+  const bootstraps = require("@electron/remote").require(
+    "./routes/children/fetch-bootstrap/bootstraps/index"
+  );
 
   if (chainTicker && chainTicker.length > 0 && bootstraps[chainTicker.toLowerCase()]) {
     bootstraps[chainTicker.toLowerCase()].setup((text) => {

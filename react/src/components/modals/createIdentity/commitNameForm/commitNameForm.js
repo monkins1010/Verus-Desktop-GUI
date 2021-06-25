@@ -119,7 +119,7 @@ class CommitNameForm extends React.Component {
 
   updateFormErrors() {
     //TODO: Add more errors in here by checking referralId
-    const { setContinueDisabled, activeCoin } = this.props
+    const { setContinueDisabled } = this.props
     const { referralId, name, primaryAddress } = this.state
     let formErrors = {
       referralId: [],
@@ -143,7 +143,7 @@ class CommitNameForm extends React.Component {
     if (
       primaryAddress != null &&
       primaryAddress.length > 0 &&
-      !checkPublicAddress(primaryAddress, activeCoin.id)
+      !checkPublicAddress(primaryAddress, "VRSC")
     ) {
       formErrors.primaryAddress.push(ERROR_INVALID_ADDR);
     }

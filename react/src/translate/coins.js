@@ -105,7 +105,7 @@ const coins = {
     //ZET: 'Zetacoin',
     //AXE: 'Axe',
     //MZC: 'Mazacoin',
-    BZC: 'Bitzec',
+    //BZC: 'Bitzec',
   },
   ETH: {
     ETH: 'Ethereum',

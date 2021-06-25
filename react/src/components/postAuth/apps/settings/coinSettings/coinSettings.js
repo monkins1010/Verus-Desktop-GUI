@@ -3,10 +3,18 @@ import { connect } from 'react-redux';
 import { 
   CoinSettingsRender,
 } from './coinSettings.render';
-import { NATIVE, RUN_SIGN_HASH, ERROR_SNACK } from '../../../../../util/constants/componentConstants';
-import { customRpcCall } from '../../../../../util/api/wallet/walletCalls';
-import { updateLocalBlacklists, newSnackbar, updateLocalWhitelists } from '../../../../../actions/actionCreators';
+import { NATIVE, ERROR_SNACK, API_SUCCESS, CSV_EXPORT } from '../../../../../util/constants/componentConstants';
+import { customRpcCall, getTransactions } from '../../../../../util/api/wallet/walletCalls';
+import {
+  updateLocalBlacklists,
+  newSnackbar,
+  updateLocalWhitelists,
+  setModalNavigationPath,
+  setModalParams,
+} from "../../../../../actions/actionCreators";
 import Store from '../../../../../store';
+import { timeConverter } from '../../../../../util/displayUtil/timeUtils';
+import { renderAffectedBalance } from '../../../../../util/txUtils/txRenderUtils';
 
 class CoinSettings extends React.Component {
   constructor(props) {
@@ -20,7 +28,8 @@ class CoinSettings extends React.Component {
       activeTab: 0,
       tabs: this.availableModeArr,
       disableBlacklist: false,
-      disableWhitelist: false
+      disableWhitelist: false,
+      loadingTxs: false
     }
 
     // Any properties here will prevent the command with their key from being run
@@ -33,17 +42,18 @@ class CoinSettings extends React.Component {
     this.callDaemonCmd = this.callDaemonCmd.bind(this)
     this.removeFromBlacklist = this.removeFromBlacklist.bind(this)
     this.removeFromWhitelist = this.removeFromWhitelist.bind(this)
+    this.exportAllNativeTransactions = this.exportAllNativeTransactions.bind(this)
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.selectedCoinObj != this.props.selectedCoinObj) {      
+    //if (nextProps.selectedCoinObj != this.props.selectedCoinObj) {      
       //TODO: Uncomment this when you add settings for electrum or eth modes
       /*this.availableModeArr = Object.keys(nextProps.selectedCoinObj.available_modes).filter(mode => {
         return nextProps.selectedCoinObj.available_modes[mode]
       })*/
 
-      this.setState({ activeTab: 0, tabs: this.availableModeArr })
-    }
+    //  this.setState({ activeTab: 0, tabs: this.availableModeArr })
+    //}
   }
 
   removeFromBlacklist(value) {
@@ -93,6 +103,90 @@ class CoinSettings extends React.Component {
         dispatch(newSnackbar(ERROR_SNACK, e.message))
         this.setState({ disableWhitelist: false })
       }
+    })
+  }
+
+  exportAllNativeTransactions() {
+    this.setState({ loadingTxs: true }, async () => {
+      try {
+        const { id } = this.props.selectedCoinObj
+  
+        const apiResult = await getTransactions(
+          NATIVE,
+          id,
+          null,
+          true,
+        );
+        
+        if (apiResult.msg === API_SUCCESS) {
+          const transactions = apiResult.result
+  
+          this.props.dispatch(
+            setModalParams(CSV_EXPORT, {
+              transactions: transactions
+                .map((tx) => {
+                  const type = tx.type ? tx.type : tx.category;
+                  const amount = Number(tx.amount);
+                  const affectedBalance = renderAffectedBalance(tx);
+
+                  return {
+                    type:
+                      type === "sent"
+                        ? "send"
+                        : type === "received"
+                        ? "receive"
+                        : type,
+                    txid: tx.txid,
+                    date: timeConverter(
+                      Number(
+                        tx.blocktime != null ? tx.blocktime : tx.timestamp
+                      ),
+                      true
+                    ),
+                    confirmations: Number(tx.confirmations),
+                    amount:
+                      (type === "sent" || type === "send") &&
+                      !isNaN(amount) &&
+                      amount > 0
+                        ? amount * -1
+                        : amount,
+                    address: tx.address,
+                    affected_balance:
+                      affectedBalance != null
+                        ? affectedBalance.props.children
+                        : affectedBalance,
+                    coin: id,
+                    fee: tx.fee != null ? Math.abs(tx.fee) : tx.fee,
+                  };
+                })
+                .sort(
+                  (a, b) =>
+                    (a.confirmations == null ? 0 : a.confirmations) -
+                    (b.confirmations == null ? 0 : b.confirmations)
+                ),
+            })
+          );
+          this.props.dispatch(setModalNavigationPath(CSV_EXPORT));
+        } else {
+          this.props.dispatch(
+            newSnackbar(
+              ERROR_SNACK,
+              `Error fetching transactions, ensure the ${id} daemon is running.`
+            )
+          );
+          console.error(apiResult.result)
+        }
+      } catch (e) {
+        this.props.dispatch(
+          newSnackbar(
+            ERROR_SNACK,
+            `Error exporting transaction CSV for ${id}.`
+          )
+        );
+        console.error(e)
+      }
+
+      this.setState({ loadingTxs: false })
     })
   }
 
