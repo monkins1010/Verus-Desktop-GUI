@@ -14,7 +14,6 @@ export const SimplecrowdfundFormRender = function() {
       style={{
         width: "100%",
         height: "85%",
-        display: "flex",
         justifyContent: formStep === ENTER_DATA ? "space-evenly" : "center",
         alignItems: formStep === ENTER_DATA ? "flex-start" : "unset",
         marginBottom: formStep === ENTER_DATA ? 0 : 20,

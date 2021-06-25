@@ -12,7 +12,7 @@ import {
   CONFIRM_DATA,
   CREATE_IDENTITY,
   CREATE_ADVANCED_CURRENCY,
-  ERROR_NAME_REQUIRED,
+  ERROR_CURRENCY_NAME_REQUIRED,
   ERROR_CROWDFUND_NAME_REQUIRED,
   ERROR_INVALID_ID,
   ENTER_DATA,
@@ -21,7 +21,9 @@ import {
 } from "../../../../util/constants/componentConstants";
 import { newSnackbar } from '../../../../actions/actionCreators';
 import { checkPublicAddress } from '../../../../util/addrUtils';
-
+import Checkbox from '@material-ui/core/Checkbox';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 const items = [
     'Fractional',
@@ -67,26 +69,38 @@ class DefineCurrencyForm extends React.Component {
     this.state = {
       addrList: addressListFormatted,
       name: '',
-      optionsisChecked: {},
-      idReferralPrice: null,
-      idReferalLevels: null,
-      notariesforchain: '',
-      referralPrice: null,
-      referralPrice: null,
-      referralPrice: null,
-      referralPrice: null,
-      referralPrice: null,
-      referralPrice: null,
-      referralPrice: null,
-      referralPrice: null,
-      referralPrice: null,
-      referralPrice: null,
-      primaryAddress: '',
-      min_amount : 0,
-      max_amount : 0,
-      receiveaddress : '', //TODO define more params for the crowdfund in here
-      blockheight: 0,
-      receiveamount: 0,
+      options: null,
+      advanced:{
+        idregistrationprice: null,
+        idReferalLevels: null,
+        notariesforchain: null,
+        minnotariesconfirm: null,
+        notarizationreward: null,
+        billingperiod: null,
+        proofprotocol: null,
+        startblock: null,
+        endblock: null,
+        currencies: null,
+        conversions: null,
+        minpreconversion: null,
+        maxpreconversion: null,
+        initialcontributions: null,
+        prelaunchdiscount: null,
+        initialsupply: null,
+        prelaunchcarveouts: null,
+        preallocations: null,
+        reward: null,
+        decay: null,
+        halving: null,
+        eraend: null,
+        nodes: null,
+        nodeidentity: null,
+        gatewayconvertername: null,
+        gatewayconverterissuance: null,
+        gatewayinitialsupply: null,
+        gatewayinitialcontributions: null}
+      ,
+      checked: [null,null,null,null,null,null,null,null,null,null,null],
       formErrors: {
         referralId: [],
         name: [],
@@ -98,7 +112,11 @@ class DefineCurrencyForm extends React.Component {
 
     this.updateFormData = this.updateFormData.bind(this)
     this.setAndUpdateState = this.setAndUpdateState.bind(this)
+    this.setAndUpdateStateAdvanced = this.setAndUpdateStateAdvanced.bind(this)
+    this.setAndUpdateChecked = this.setAndUpdateChecked.bind(this)
     this.updateInput = this.updateInput.bind(this)
+    this.updateInputAdvanced = this.updateInputAdvanced.bind(this)
+    this.updateChecked = this.updateChecked.bind(this)
     this.updateFormErrors = this.updateFormErrors.bind(this)
     this.generateTxDataDisplay = this.generateTxDataDisplay.bind(this)
   }
@@ -129,45 +147,41 @@ class DefineCurrencyForm extends React.Component {
   }
 
 
-  createCheckbox = label => (
-    <label style={{ marginRight: 10}}>
-        <input
-        type="checkbox"
-        value={label}
-        style={{ marginRight: 3}}
-        />
-        {label}
-    </label>
+  createCheckbox = (label,i) => (
+    <FormControlLabel
+    control={<Checkbox checked={this.state.checked[i]} onChange={this.updateChecked} name={i} color="primary"/>}
+    label={`${label}`}
+  />
   )
   createCheckboxes = () => (
-    items.map(this.createCheckbox)
+    <FormGroup row>
+   {items.map(this.createCheckbox)}
+    </FormGroup>
   )
 
 
   generateTxDataDisplay() {
     const { txData, formStep, formData } = this.props
+    const {advanced, options} = formData
+    const { namereservation, name, chainTicker } = txData
 
-    const { namereservation, controlAddress } = txData
-
-    const {min_amount, receiveamount,  max_amount, receiveaddress, blockheight} = formData.extra
+    
 
     let txDataSchema = {
       ["Status:"]: formStep === CONFIRM_DATA ? null : txData[TXDATA_STATUS],
       ["Error:"]: txData[TXDATA_ERROR],
-      ["Chain:"]: txData.coin,
-      ["Transaction ID:"]: txData[TXDATA_TXID],
-      ["Control Address:"]: controlAddress,
-      ["Name of crowdfund to be created:"]: namereservation ? namereservation.name : null,
+      ["Chain:"]: chainTicker,
+      ["Name of currency to be created:"]: name,
+      ["Options:"]: options,
       ["Name Address:"]: namereservation ? namereservation.nameid : null,
       ["Referral ID:"]: namereservation && namereservation.referral && namereservation.referral.length > 0 ? namereservation.referral : null,
-      ["Minimum amount before crowdfund Launches:"]: min_amount,
-      ["Maximum amount for crowdfund Launch:"]: max_amount,
-      ["Blockheight Project to launch at"]: blockheight,
-      ["Addresses crowdfunds issued to:"]: receiveaddress,
-      ["crowdfund pre-allocation amount "]: receiveamount
-
-
+      
     };
+
+    for (const key in advanced) {
+
+      txDataSchema[key]= advanced[key]  ; 
+    }
 
     Object.keys(txDataSchema).forEach(txDataKey => {
       if (txDataSchema[txDataKey] == null) delete txDataSchema[txDataKey]
@@ -192,26 +206,10 @@ class DefineCurrencyForm extends React.Component {
     }
 
     if (name != null && name.length == 0) {
-      formErrors.name.push(ERROR_CROWDFUND_NAME_REQUIRED)
+      formErrors.name.push(ERROR_CURRENCY_NAME_REQUIRED)
     }  
 
-    if (
-      referralId != null &&
-      referralId.length > 0 &&
-      referralId[referralId.length - 1] !== "@" &&
-      referralId[0] !== "i"
-    ) {
-      formErrors.referralId.push(ERROR_INVALID_ID);
-    }
-
-    if (
-      primaryAddress != null &&
-      primaryAddress.length > 0 &&
-      !checkPublicAddress(primaryAddress, activeCoin.id)
-    ) {
-      formErrors.primaryAddress.push(ERROR_INVALID_ADDR);
-    }
-
+  
     this.setState({ formErrors }, () => {
       setContinueDisabled(!Object.keys(this.state.formErrors).every((formInput) => {
         return (this.state.formErrors[formInput].length == 0)
@@ -225,6 +223,39 @@ class DefineCurrencyForm extends React.Component {
       this.updateFormData()
     })
   }
+  
+  setAndUpdateChecked(stateModifiers) {
+    var key = Object.keys(stateModifiers)[0];
+    var array = [...this.state.checked];
+    array[parseInt(key,10)] = stateModifiers[key];
+
+    var total =0;
+
+    array.forEach((key, index) => {
+      total += key == true ? Math.pow(2,index) : 0;
+    });
+
+
+    this.setState({checked: array, options: total }, () => {
+      this.updateFormErrors()
+      this.updateFormData()
+    })
+  }
+
+  setAndUpdateStateAdvanced(stateModifiers) {
+    var key = Object.keys(stateModifiers)[0];
+    this.setState({advanced: {...this.state.advanced, [key]:stateModifiers[key]} }, () => {
+      this.updateFormErrors()
+      this.updateFormData()
+    })
+  }
+
+  updateChecked(e, value = false) {
+    this.setAndUpdateChecked({
+      [e.target.name]:
+        value === false ? e.target.checked : value == null ? "" : value,
+    });
+  }
 
   updateInput(e, value = false) {
     this.setAndUpdateState({
@@ -233,16 +264,22 @@ class DefineCurrencyForm extends React.Component {
     });
   }
 
+  updateInputAdvanced(e, value = false) {
+    this.setAndUpdateStateAdvanced({
+      [e.target.name]:
+        value === false ? e.target.value : value == null ? "" : value,
+    });
+  }
+
   updateFormData() {
     const { chainTicker } = this.props
-    const { name, referralId, primaryAddress, min_amount, receiveamount,  max_amount, receiveaddress, blockheight } = this.state
+    const { name, options, advanced } = this.state
 
     this.props.setFormData({
       chainTicker,
       name,
-      referralId,
-      primaryAddress,
-      extra :{ min_amount, receiveamount,  max_amount, receiveaddress, blockheight, tokenState: 0, type: "SIMPLECROWDFUND"}
+      options, 
+      advanced
     });
   }
 

@@ -6,6 +6,38 @@ import { ENTER_DATA, DEFAULT_REFERRAL_IDS, INFO_SNACK } from '../../../../util/c
 import SuggestionInput from '../../../../containers/SuggestionInput/SuggestionInput'
 import { InputAdornment } from '@material-ui/core';
 
+
+const item_descriptions = [
+  "Enter ID registration Price",
+  "Enter how many levels ID referrals go back in reward",
+  "Enter Notaries e.g Bob@, jim@",
+  "unique notary signatures required to confirm an auto-notarization if = 3",
+  "Default VRSC notarization reward total for first billing",
+  "Number of blocks in each billing period",
+  "If 2, currency can be minted by whoever controls the ID",
+  "VRSC block must be notarized into block 1 of PBaaS chain, default curheight + 100",
+  "Chain is considered inactive after this block height, and  a new one may be started",
+  "Reserve currencies backing this chain in equal amounts",
+  "If present, must be same size as currencies. pre-launch conversion ratio overrides",
+  "Must be same size as currencies. minimum in each currency to launch",
+  "Maximum in each currency allowed",
+  "Initial contribution in each currency",
+  "Reserve currencies less than 100%, discount on final price at launch",
+  "Supply after conversion of contributions, before preallocation",
+  "Identities and % of  pre-converted amounts from each reserve currency",
+  "List of identities and amounts from pre-allocation",
+  "Native initial block rewards in each period",
+  "Reward decay for each era",
+  "Halving period for each era",
+  "Ending block of each era",
+  "Up to 2 nodes that can be used to  connect to the blockchain",
+  "Rewards payment and identity",
+  "Name of gateway conveter currency",
+  "Gateway currency issuance",
+  "Gateway currency initial supply",
+  "Gateway currency initial contributions"
+];
+
 export const DefineCurrencyFormRender = function() {
   const { formStep } = this.props
   return (
@@ -14,7 +46,6 @@ export const DefineCurrencyFormRender = function() {
       style={{
         width: "100%",
         height: "85%",
-        display: "flex",
         justifyContent: formStep === ENTER_DATA ? "space-evenly" : "center",
         alignItems: formStep === ENTER_DATA ? "flex-start" : "unset",
         marginBottom: formStep === ENTER_DATA ? 0 : 20,
@@ -41,108 +72,45 @@ export const CommitNameTxDataRender = function() {
 
 
 export const DefineCurrencyFormEnterRender = function() {
-  const { state, updateInput, props } = this
-  const { name, referralId, formErrors, min_amount, receiveamount,  max_amount, receiveaddress, blockheight } = state;
+  const { state, updateInput, updateInputAdvanced, props } = this
+  const { name, formErrors } = state;
   const { identities, activeCoin, info } = props
 
-  let block30 = 43200 + info.blocks
+
   return (
     <React.Fragment>
        
        <SuggestionInput
-      //  error={formErrors.simple_addresses.length > 0}
-      //  helperText={formErrors.simple_addresses ? formErrors.simple_addresses[0] : null}
+        error={formErrors.name.length > 0}
+        helperText={formErrors.name ? formErrors.name[0] : null}
         label="Choose the name of Currency or PBaaS Chain"
         items={identities.map((id) => `${id.identity.name}`)}
         variant="outlined"
         onChange={updateInput}
         name="name"
         value={name}
-        containerStyle={{ marginTop: 90, width: "95%" }}
+        containerStyle={{ marginTop: 10, width: "95%" }}
       />
       <div className="col-xs-12 margin-top-20 backround-gray" style={{display : 'inline-block', padding: '5px'}}>
         {this.createCheckboxes()}
       </div>
-      <SuggestionInput
-        value={referralId}
-        name="referralId"
-        error={formErrors.referralId.length > 0}
-        helperText={
-          formErrors.referralId && formErrors.referralId.length > 0
-            ? formErrors.referralId[0]
-            : `Using a referral ID will discount the cost of creating your VerusID.${
-                DEFAULT_REFERRAL_IDS[activeCoin.id] != null
-                  ? ` If left blank, this will default to "${
-                      DEFAULT_REFERRAL_IDS[activeCoin.id]
-                    }".`
-                  : ""
-              }`
-        }
-        items={identities.map((id) => `${id.identity.name}@`)}
-        label="Enter referral identity (optional)"
-        onChange={updateInput}
-        containerStyle={{ marginTop:10, width: "95%" }}
-      />
-      <TextField
-        //  error={formErrors.amount.length > 0}
-        //  helperText={formErrors.amount ? formErrors.amount[0] : null}
-          label={`Enter minimum amount of ${activeCoin.id} to enable project to launch`}
-          value={min_amount}
-          onChange={updateInput}
+
+
+      { Object.keys(this.state.advanced).map((a,i) =>{
+       return (
+        <div style={{ width: "100%", paddingLeft: 35, paddingRight: 35 }}> 
+        
+        <TextField 
+          label={a+ ": " + item_descriptions[i]} 
+          name={a} 
+          value={this.state.advanced[a]} 
           variant="outlined"
-          type="number"
-          name="min_amount"
-          style={{ marginTop: 10, minWidth: "95%" }}
-
-       />
-      <TextField
-       // error={formErrors.amount.length > 0}
-      //  helperText={formErrors.amount ? formErrors.amount[0] : null}
-        label={`Enter maximum amount of ${activeCoin.id} to enable project to launch`}
-        value={max_amount}
-        onChange={updateInput}
-        variant="outlined"
-        type="number"
-        name="max_amount"
-        style={{ marginTop: 10, minWidth: "95%" }}
-
-      />
-       <TextField
-       // error={formErrors.amount.length > 0}
-      //  helperText={formErrors.amount ? formErrors.amount[0] : null}
-        label={`Enter the blockheight when then the crowdfund should launch`}
-        value={blockheight}
-        onChange={updateInput}
-        variant="outlined"
-        type="number"
-        name="blockheight"
-        style={{ marginTop: 10, minWidth: "95%", maxWidth: "95%" }}
-        helperText={`For example for the project to start in 30 days time. Each block is on average 1 minute `
-        + ` Therfore 30 x 24 x 60 = 43200` + ` Current blockheight is ${info.blocks}, for 30 days time start at blockheight: ${block30}`  }
-      />
-      
-      <SuggestionInput
-      //  error={formErrors.simple_addresses.length > 0}
-      //  helperText={formErrors.simple_addresses ? formErrors.simple_addresses[0] : null}
-        label="Enter address to receive tokens"
-        items={identities.map((id) => `${id.identity.name}@`)}
-        variant="outlined"
-        onChange={updateInput}
-        name="receiveaddress"
-        value={receiveaddress}
-        containerStyle={{ marginTop: 10, width: "95%" }}
-      />
-      <TextField
-       // error={formErrors.amount.length > 0}
-      //  helperText={formErrors.amount ? formErrors.amount[0] : null}
-        label="Amount of Tokens to be sent to be preallocated to you"
-        onChange={updateInput}
-        variant="outlined"
-        type="number"
-        name="receiveamount"
-        value={receiveamount}
-        style={{ marginTop: 10, minWidth: "75%"}}
-      />
+          onChange={updateInputAdvanced} 
+          style={{ marginTop: 10, width: "95%" }}  /> 
+          </div>
+          )
+      }) 
+          }
 
     </React.Fragment>
   );

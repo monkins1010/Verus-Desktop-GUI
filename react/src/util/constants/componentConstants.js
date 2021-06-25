@@ -81,6 +81,7 @@ export const API_CREATE_SIMPLE_CROWDFUND_PREFLIGHT = 'create_simple_crowdfund_pr
 export const API_LAUNCH_SIMPLE_CROWDFUND = 'launch_simple_crowdfund'
 export const API_LAUNCH_SIMPLE_CROWDFUND_PREFLIGHT = 'launch_simple_crowdfund_preflight'
 export const API_REGISTER_SIMPLE_CROWDFUND_ID = 'register_simple_crowdfund_id'
+export const API_CREATE_ADVANCED_CURRENCY_PREFLIGHT = 'create_advanced_currency_preflight'
 export const API_CREATE_ADVANCED_CURRENCY = 'create_advanced_currency'
 
 // Non-blockchain API call paths
@@ -416,6 +417,10 @@ export const ERROR_INVALID_Z_ADDR = 'Invalid private address'
 //Create Simple Token form errors
 export const ERROR_TOKEN_NAME_REQUIRED = 'A Token name is required'
 export const ERROR_CROWDFUND_NAME_REQUIRED = 'A crowdfund name is required'
+
+//Advanced currency Errors
+export const ERROR_CURRENCY_NAME_REQUIRED = 'A Currency name is required which you own the identity of e.g. Bob@'
+
 
 // Create identity defaults
 export const DEFAULT_REFERRAL_IDS = {

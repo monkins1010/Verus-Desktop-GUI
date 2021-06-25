@@ -6,7 +6,9 @@ import {
   API_LAUNCH_SIMPLE_TOKEN_PREFLIGHT,
   API_LAUNCH_SIMPLE_TOKEN,
   API_LAUNCH_SIMPLE_CROWDFUND,
-  API_LAUNCH_SIMPLE_CROWDFUND_PREFLIGHT
+  API_LAUNCH_SIMPLE_CROWDFUND_PREFLIGHT,
+  API_CREATE_ADVANCED_CURRENCY_PREFLIGHT,
+  API_CREATE_ADVANCED_CURRENCY
 } from "../../../constants/componentConstants";
 
 export const registerIdNameForFactory = async (
@@ -47,7 +49,7 @@ export const registerIdNameForFactory = async (
 
 
 
-  export const launchSimpleToken = async (
+export const launchSimpleToken = async (
     preflight,
     chainTicker,
     name,
@@ -88,6 +90,32 @@ export const registerIdNameForFactory = async (
         {
           chainTicker,
           name,
+          extra,
+          delocalize: true
+        } 
+      );
+    } catch (e) {
+      throw e
+    }
+  };
+
+  export const createAdvancedCurrencyFactory = async (
+    preflight,
+    chainTicker,
+    name,
+    options,
+    extra
+  ) => {
+    try {
+  
+    //  var options = 96; // token paramter to launch simple token
+      return await getApiData(
+        NATIVE,
+        preflight ? API_CREATE_ADVANCED_CURRENCY_PREFLIGHT : API_CREATE_ADVANCED_CURRENCY,
+        {
+          chainTicker,
+          name,
+          options,
           extra,
           delocalize: true
         } 

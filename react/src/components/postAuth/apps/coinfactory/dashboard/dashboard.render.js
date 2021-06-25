@@ -70,7 +70,7 @@ export const DashboardRender = function() {
         }}
         onClick={ () => this.openSimplecrowdfundModal(identityChains[0])}
        >
-        {"Create crowdfund"}
+        {"Create Crowdfund"}
       </button>
               <a  style={{ marginLeft: "5px"}}>
                                  

@@ -21,7 +21,7 @@ import {
   DEFAULT_REFERRAL_IDS,
   API_CREATE_ADVANCED_CURRENCY
 } from "../../../util/constants/componentConstants";
-import { registerIdNameForFactory } from '../../../util/api/wallet/walletCalls';
+import { createAdvancedCurrencyFactory } from '../../../util/api/wallet/walletCalls';
 import { newSnackbar, expireData } from '../../../actions/actionCreators';
 import { conditionallyUpdateWallet } from '../../../actions/actionDispatchers';
 import Store from '../../../store'
@@ -88,32 +88,18 @@ class CreateAdvancedCurrency extends React.Component {
         const {
           chainTicker,
           name,
-          controlAddress,
-          referralId,
-          txid,
-          salt,
-          revocationAuthority,
-          recoveryAuthority,
-          privateAddress,
-          primaryAddress,
-          extra
+          options,
+          advanced
         } = formData;
 
-        const _privateAddress =
-          privateAddress == null || privateAddress.length === 0
-            ? null
-            : privateAddress;
-
+       
         if (modalProps.modalType === API_CREATE_ADVANCED_CURRENCY) {
-            _txData = await registerIdNameForFactory(
+            _txData = await createAdvancedCurrencyFactory(
               !formStep,
               chainTicker,
               name,
-              (primaryAddress == null || primaryAddress.length === 0)
-                ? null
-                : primaryAddress,
-              this.selectReferralIdentity(referralId),
-              extra
+              options,
+              advanced
             );
           } 
 
