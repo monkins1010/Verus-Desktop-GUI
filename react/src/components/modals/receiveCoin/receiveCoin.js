@@ -179,7 +179,7 @@ class ReceiveCoin extends React.Component {
       const tag = addr.tag.toLowerCase()
 
       if (tag.includes(term) || term.includes(tag)) return true
-      if (addr.balances.native.toString().includes(term)) return true
+      if (addr.balances != null && addr.balances.native.toString().includes(term)) return true
       if (addr.address.toLowerCase().includes(term)) return true
     })
 
@@ -187,8 +187,8 @@ class ReceiveCoin extends React.Component {
       const tag = addr.tag.toLowerCase()
 
       if (tag.includes(term) || term.includes(tag)) return true
-      if (addr.balances.native.toString().includes(term)) return true
-      if (Object.keys(addr.balances.reserve).includes(term)) return true
+      if (addr.balances != null && addr.balances.native.toString().includes(term)) return true
+      if (addr.balances != null && Object.keys(addr.balances.reserve).includes(term)) return true
       if (addr.address.toLowerCase().includes(term)) return true
     })
 

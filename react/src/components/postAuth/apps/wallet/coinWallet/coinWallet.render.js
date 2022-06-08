@@ -25,7 +25,8 @@ import {
   API_UPDATE_ID,
   IS_PBAAS,
   Z_ONLY,
-  LOCK_WITH_DELAY
+  LOCK_WITH_DELAY,
+  ELECTRUM
 } from "../../../../../util/constants/componentConstants";
 import { VirtualizedTable } from '../../../../../containers/VirtualizedTable/VirtualizedTable'
 import { timeConverter } from '../../../../../util/displayUtil/timeUtils'
@@ -35,13 +36,16 @@ import ArrowUpward from '@material-ui/icons/ArrowUpward';
 import ArrowDownward from '@material-ui/icons/ArrowDownward';
 import WalletPaper from '../../../../../containers/WalletPaper/WalletPaper'
 import TransactionCard from '../../../../../containers/TransactionCard/TransactionCard'
-import { MenuItem, Tooltip, Typography } from "@material-ui/core";
+import { MenuItem, Tooltip, Typography, Link } from "@material-ui/core";
 import CustomButton from "../../../../../containers/CustomButton/CustomButton";
 import MigrationHelper from "../../../../../containers/MigrationHelper/MigrationHelper";
 import { closeTextDialog, openIdentityCard, openSetupVaultModal, openTextDialog } from "../../../../../actions/actionDispatchers";
 import { claimRfoxMigration, estimateGasRfoxMigration, getRfoxMigrationAccountBalances } from "../../../../../util/api/wallet/walletCalls";
 import { checkFlag } from "../../../../../util/flagUtils";
 import { TIMELOCK_DELAY_FLAG } from "../../../../../util/constants/flags";
+const { shell } = window.bridge
+
+const WIKI_LITE_TO_NATIVE = "https://wiki.verus.io/#!how-to/how-to_convert-seed-to-wif.md"
 
 export const CoinWalletRender = function() {
   return (
@@ -161,6 +165,28 @@ export const CoinWalletRender = function() {
           ? WalletRenderCurrencyFunctions.call(this)
           : null
       }
+      {this.props.activatedCoins[this.props.coin] &&
+        this.props.activatedCoins[this.props.coin].id === "ZEC" &&
+        this.props.activatedCoins[this.props.coin].mode === ELECTRUM && (
+          <WalletPaper
+            style={{
+              marginBottom: 16,
+              padding: 8,
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <Link
+              href={"#"}
+              style={{ fontWeight: "bold", textAlign: "center" }}
+              onClick={() => shell.openExternal(WIKI_LITE_TO_NATIVE)}
+            >
+              {
+                "Warning: Zcash lite mode servers are offline as of the latest Zcash network upgrade. We recommend importing your private key (accessible through the receive menu) into a different wallet, or into Zcash native mode."
+              }
+            </Link>
+          </WalletPaper>
+        )}
       {
         /* TODO: Add a way to detect if a coin allows migration */ this.props.coin === "RFOX" && (
           <MigrationHelper
@@ -998,7 +1024,7 @@ export const WalletRenderCurrencyFunctions = function() {
           >
             <Typography style={{ fontWeight: "bold", textAlign: "center" }}>
               {
-                "Warning: All testnet coins/currencies have no value and will disappear whenever VRSCTEST is reset"
+                "Warning: All testnet coins/currencies have no value and will disappear whenever VRSCTEST is reset."
               }
             </Typography>
           </WalletPaper>

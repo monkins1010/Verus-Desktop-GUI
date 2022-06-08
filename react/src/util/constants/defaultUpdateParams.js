@@ -625,8 +625,8 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
         tracking_info: {
           needs_update: true,
           busy: false,
-          location_restrictions: [/*`receive_coin@post_auth/apps/wallet/${ticker}${FIX_CHARACTER}${CHAIN_POSTFIX}`*/],
-          location_and_type_restrictions: [/*['@post_auth/apps/pbaas/create', IS_PBAAS_ROOT]*/]
+          location_restrictions: [],
+          location_and_type_restrictions: []
         },
         interval_info: {
           expire_id: null,
@@ -641,8 +641,8 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
         tracking_info: {
           needs_update: true,
           busy: false,
-          location_restrictions: [/*`receive_coin@post_auth/apps/wallet/${ticker}${FIX_CHARACTER}${CHAIN_POSTFIX}`*/],
-          location_and_type_restrictions: [/*['@post_auth/apps/pbaas/create', IS_PBAAS_ROOT]*/]
+          location_restrictions: [],
+          location_and_type_restrictions: []
         },
         interval_info: {
           expire_id: null,

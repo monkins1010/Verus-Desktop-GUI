@@ -303,11 +303,11 @@ export const ConvertCurrencyFormSimpleOptionText = function (conversionPath) {
   return `${conversionPath.destination.name}${
     conversionPath.via
       ? ` (${
-          conversionPath.exportto ? (conversionPath.gateway ? "gateway " : "off-chain ") : ""
+          conversionPath.exportto ? (conversionPath.gateway ? "off-system " : "off-chain ") : ""
         }via ${conversionPath.via.name})`
       : conversionPath.exportto
       ? conversionPath.gateway
-        ? " (gateway)"
+        ? " (off-system)"
         : " (off-chain)"
       : ""
   } [${
@@ -478,9 +478,7 @@ export const ConvertCurrencyFormSimpleRender = function() {
               size="small"
               grouped={false}
               freeSolo={false}
-              onChange={(e) =>
-                this.selectConversionPath(e.target.value == "" ? null : e.target.value)
-              }
+              onChange={(e) => this.selectConversionPath(e.target.value === "" ? null : e.target.value)}
               disabled={this.state.conversionPaths.length == 0}
               renderOption={(option) => {
                 return (
@@ -814,21 +812,19 @@ export const ConvertCurrencyFormAdvancedRender = function() {
                   </label>
                 </div>
               </div>
-              {preconvert && (
-                <div style={{ display: "flex", marginTop: 8 }}>
-                  <TextField
-                    label="Refund Address"
-                    variant="outlined"
-                    size="small"
-                    onChange={(e) =>
-                      this.updateOutput("refundto", e.target.value, index)
-                    }
-                    value={refundto}
-                    style={{ flex: 1 }}
-                    disabled={isConfirmStep}
-                  />
-                </div>
-              )}
+              <div style={{ display: "flex", marginTop: 8 }}>
+                <TextField
+                  label="Refund Address"
+                  variant="outlined"
+                  size="small"
+                  onChange={(e) =>
+                    this.updateOutput("refundto", e.target.value, index)
+                  }
+                  value={refundto}
+                  style={{ flex: 1 }}
+                  disabled={isConfirmStep}
+                />
+              </div>
               <div style={{ display: "flex", marginTop: 8 }}>
                 <TextField
                   label="Memo"

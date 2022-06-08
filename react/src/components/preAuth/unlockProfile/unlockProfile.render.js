@@ -29,6 +29,16 @@ export const UnlockProfileRender = function() {
         >
           skip for now
         </button>
+        <button
+          className="btn btn-primary pre-auth-button"
+          onClick={() => this.handleSubmit(this.pwdInput.value)}
+          disabled={
+            this.state.formLock ||
+            (this.pwdInput && this.pwdInput.value && this.pwdInput.value.length == 0)
+          }
+        >
+          unlock
+        </button>
       </div>
     </form>
   );

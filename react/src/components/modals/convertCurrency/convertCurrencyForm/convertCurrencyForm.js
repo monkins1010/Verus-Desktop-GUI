@@ -17,7 +17,7 @@ import {
   SIMPLE_CONVERSION,
   WHITELISTS,
 } from "../../../../util/constants/componentConstants";
-import { getCurrencyConversionPaths, getIdentity, sendCurrency } from '../../../../util/api/wallet/walletCalls';
+import { getCurrencyConversionPaths, getIdentity, getRefundAddress, sendCurrency } from '../../../../util/api/wallet/walletCalls';
 import { expireData, newSnackbar, updateLocalWhitelists } from '../../../../actions/actionCreators';
 
 class ConvertCurrencyForm extends React.Component {
@@ -196,31 +196,50 @@ class ConvertCurrencyForm extends React.Component {
       const response = await sendCurrency(
         this.props.modalProps.chainTicker,
         this.state.fromAddress,
-        this.state.outputs.map((output) => {
-          const {
-            currency,
-            amount,
-            convertto,
-            via,
-            address,
-            refundto,
-            memo,
-            preconvert,
-            exportto
-          } = output;
+        await Promise.all(
+          this.state.outputs.map(async (output) => {
+            const {
+              currency,
+              amount,
+              convertto,
+              via,
+              address,
+              refundto,
+              memo,
+              preconvert,
+              exportto,
+            } = output;
+            let finalRefundTo = refundto;
 
-          return {
-            currency,
-            amount,
-            convertto,
-            via,
-            address,
-            refundto,
-            memo,
-            preconvert,
-            exportto
-          };
-        })
+            // Refundto is required for txs to different systems
+            if (
+              address.startsWith("0x") &&
+              !address.includes("@") &&
+              (finalRefundTo == null || finalRefundTo.length == 0)
+            ) {
+              const refundAddrResponse = await getRefundAddress(
+                NATIVE,
+                this.props.modalProps.chainTicker
+              );
+
+              if (refundAddrResponse.msg === "success") {
+                finalRefundTo = refundAddrResponse.result;
+              }
+            }
+
+            return {
+              currency,
+              amount,
+              convertto,
+              via,
+              address,
+              refundto: finalRefundTo,
+              memo,
+              preconvert,
+              exportto,
+            };
+          })
+        )
       );
 
       if (response.msg === 'success') {

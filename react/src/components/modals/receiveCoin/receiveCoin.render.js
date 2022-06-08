@@ -140,15 +140,17 @@ export const ReceiveAddressTableRender = function() {
 
   const getDisplayBalance = (rowData) => {
     const { balances } = rowData
-    let displayBalance;
+    let displayBalance = '-';
 
-    if (balanceCurr === activeCoin.id) displayBalance = balances.native
-    else {
-      if (balances.reserve[balanceCurr] == null) {
-        displayBalance = Config.general.native.showAddressCurrencyBalances ? 0 : '-'
-      } else displayBalance = balances.reserve[balanceCurr]
+    if (balances != null) {
+      if (balanceCurr === activeCoin.id) displayBalance = balances.native;
+      else {
+        if (balances.reserve[balanceCurr] == null) {
+          displayBalance = Config.general.native.showAddressCurrencyBalances ? 0 : "-";
+        } else displayBalance = balances.reserve[balanceCurr];
+      }
     }
-
+    
     return displayBalance
   }
 

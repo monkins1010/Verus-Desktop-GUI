@@ -20,8 +20,12 @@ import { closeTextDialog, openTextDialog } from '../../../../../actions/actionDi
 class CoinSettings extends React.Component {
   constructor(props) {
     super(props);
+    this.NATIVE_TERMINAL_TAB = 'Native Terminal'
+    this.NATIVE_SETTINGS = "Native Settings"
+
     this.availableModeArr = [
-      NATIVE,
+      this.NATIVE_TERMINAL_TAB,
+      this.NATIVE_SETTINGS
     ]; /*Object.keys(props.selectedCoinObj.available_modes).filter(mode => {
       return props.selectedCoinObj.available_modes[mode]
     })*/
@@ -315,16 +319,15 @@ class CoinSettings extends React.Component {
   setConfigValue(name, value) {
     const { props, state } = this;
     const { displayConfig, setDisplayConfig, selectedCoinObj } = props;
-    const { activeTab, tabs } = state;
 
     setDisplayConfig({
       ...displayConfig,
       coin: {
         ...displayConfig.coin,
-        [tabs[activeTab]]: {
-          ...displayConfig.coin[tabs[activeTab]],
+        [NATIVE]: {
+          ...displayConfig.coin[NATIVE],
           [name]: {
-            ...displayConfig.coin[tabs[activeTab]][name],
+            ...displayConfig.coin[NATIVE][name],
             [selectedCoinObj.id]: value,
           },
         },

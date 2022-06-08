@@ -52,6 +52,7 @@ export const API_IMPORT_WALLET = 'importwallet'
 
 // Write API call names
 export const API_CREATE_ADDRESS = 'get_newaddress'
+export const API_GET_REFUND_ADDRESS = 'get_refund_address'
 export const API_TX_PREFLIGHT = 'tx_preflight'
 export const API_SENDTX = 'sendtx'
 export const API_SENDCURRENCY = 'sendcurrency'
@@ -352,6 +353,8 @@ export const DECIMAL_INPUT = 'decimal_input'
 export const CHIPS_DISPLAY = 'chips_display'
 export const CHECKBOX = 'checkbox'
 export const STAKE_GUARD = 'stakeGuard'
+export const REFUND_ADDR = 'refundAddress'
+export const REFUND_FROM_SOURCE = 'refundFromSource'
 export const DATA_DIR = 'dataDir'
 
 // Send coin form 

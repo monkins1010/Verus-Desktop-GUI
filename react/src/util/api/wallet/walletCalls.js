@@ -23,6 +23,7 @@ export * from './readCalls/migration/rfox/getAccountBalances'
 export * from './readCalls/exportWallet'
 
 export * from './writeCalls/createAddress'
+export * from './writeCalls/getRefundAddress'
 export * from './writeCalls/sendCoin'
 export * from './writeCalls/identity'
 export * from './writeCalls/nameCommitments'
