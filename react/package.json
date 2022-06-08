@@ -144,6 +144,7 @@
     "yargs-parser": "13.1.2",
     "minimist": "1.2.6",
     "elliptic": "6.5.4",
+    "eventsource": "1.1.1",
     "dot-prop": "5.2.0",
     "npm-registry-fetch": "4.0.5",
     "node-fetch": "2.6.7",
