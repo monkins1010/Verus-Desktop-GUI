@@ -19,7 +19,8 @@ import {
   CHAIN_OPTIONS,
   SETUP_VAULT,
   WALLET_IMPORT,
-  IMMATURE_DETAILS
+  IMMATURE_DETAILS,
+  STARTBRIDGEKEEPER
 } from "../../util/constants/componentConstants";
 import AddCoin from "./addCoin/addCoin";
 import SetupVault from "./setupVault/setupVault";
@@ -38,6 +39,7 @@ import OperationInfo from "./operationInfo/operationInfo";
 import ImmatureDetails from "./immatureDetails/immatureDetails";
 import SignVerifyIdData from "./signVerifyIdData/signVerifyIdData";
 import ShieldCoinbase from "./shieldCoinbase/shieldCoinbase";
+import Bridgekeeper from "./bridgekeeper/bridgekeeper";
 import { BasicModalRender } from "./modalTypes/basicModal.render";
 import { SplitModalRender } from "./modalTypes/splitModal.render";
 import ImportWallet from "./importWallet/importWallet";
@@ -78,6 +80,7 @@ export const ModalRender = function() {
     [IMMATURE_DETAILS]: <ImmatureDetails {...COMPONENT_PROPS} />,
     [SIGN_VERIFY_ID_DATA]: <SignVerifyIdData {...COMPONENT_PROPS} />,
     [SHIELDCOINBASE]: <ShieldCoinbase {...COMPONENT_PROPS} />,
+    [STARTBRIDGEKEEPER]: <Bridgekeeper {...COMPONENT_PROPS} />,
   };
 
   return MODAL_MAP[this.state.modalPath[0]] != null

@@ -16,6 +16,7 @@ import {
   SHIELDCOINBASE,
   WARNING_SNACK,
   MID_LENGTH_ALERT,
+  STARTBRIDGEKEEPER,
 } from "../../../../../util/constants/componentConstants";
 import Store from '../../../../../store';
 import { saveConfig } from '../../../../../util/api/settings/configData';
@@ -39,6 +40,7 @@ class MiningWallet extends React.Component {
 
     this.openShieldCoinbaseModal = this.openShieldCoinbaseModal.bind(this);
     this.toggleBooklet = this.toggleBooklet.bind(this);
+    this.startBridgekeeper = this.startBridgekeeper.bind(this);
   }
 
   toggleBooklet(booklet) {
@@ -100,6 +102,13 @@ class MiningWallet extends React.Component {
       setModalParams(SHIELDCOINBASE, { chainTicker: this.props.coin })
     );
     this.props.dispatch(setModalNavigationPath(SHIELDCOINBASE));
+  }
+
+  startBridgekeeper() {
+    this.props.dispatch(
+      setModalParams(STARTBRIDGEKEEPER, { chainTicker: this.props.coin })
+    );
+    this.props.dispatch(setModalNavigationPath(STARTBRIDGEKEEPER));
   }
 
   render() {

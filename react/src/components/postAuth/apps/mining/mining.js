@@ -36,6 +36,7 @@ import { getPathParent, getLastLocation } from '../../../../util/navigationUtils
 import { stopStaking, startStaking, stopMining, startMining } from '../../../../util/api/wallet/walletCalls';
 import { conditionallyUpdateWallet } from '../../../../actions/actionDispatchers';
 import { useStringAsKey } from '../../../../util/objectUtil';
+import { startBridgekeeperprocess, stopBridgekeeperprocess, bridgekeeperStatus } from '../../../../util/api/verusbridge/verusbridge';
 
 class Mining extends React.Component {
   constructor(props) {
@@ -58,12 +59,14 @@ class Mining extends React.Component {
     
     this.setCards = this.setCards.bind(this)
     this.calculateMiningStates = this.calculateMiningStates.bind(this)
+   // this.getBridgingStates = this.getBridgingStates.bind(this)
     this.setTabs = this.setTabs.bind(this)
     this.openDashboard = this.openDashboard.bind(this)
     this.getNativeCoins = this.getNativeCoins.bind(this)
     this.openCoin = this.openCoin.bind(this)
     this.handleThreadChange = this.handleThreadChange.bind(this)
     this.toggleStaking = this.toggleStaking.bind(this)
+    this.toggleBridging = this.toggleBridging.bind(this)
     this.setTabs()
   }
 
@@ -106,6 +109,46 @@ class Mining extends React.Component {
         } else {
           await startStaking(NATIVE, chainTicker)
         }
+
+        // If successful, expire mining data and update all other expired data
+        dispatch(expireData(chainTicker, API_GET_MININGINFO))
+        if (
+          (await conditionallyUpdateWallet(
+            Store.getState(),
+            dispatch,
+            NATIVE,
+            chainTicker,
+            API_GET_MININGINFO
+          )) === API_ERROR
+        ) {
+          throw new Error("Failed to update mining status.")
+        } else this.props.dispatch(finishLoadingMiningFunctions(chainTicker))
+
+      } catch (e) {
+        // If failed, cancel loading
+        this.props.dispatch(finishLoadingMiningFunctions(chainTicker))
+        dispatch(newSnackbar(ERROR_SNACK, e.message, MID_LENGTH_ALERT))
+      }
+    }
+  }
+
+  async toggleBridging(chainTicker) {
+    const { miningInfo, dispatch } = this.props
+    let reply = {};
+    if (miningInfo[chainTicker].bridgekeeperstatus) {
+      try {
+        this.props.dispatch(startLoadingMiningFunctions(chainTicker))
+        
+        // Try to dispatch call to stop or start staking
+        if (miningInfo[chainTicker].bridgekeeperstatus?.serverrunning) {
+          reply = await stopBridgekeeperprocess(chainTicker);
+          
+        } else {
+          reply = await startBridgekeeperprocess(chainTicker);
+          
+        }
+        if (reply.msg == "error")
+          throw new Error("Bridgekeeper Error: " + reply.result)
 
         // If successful, expire mining data and update all other expired data
         dispatch(expireData(chainTicker, API_GET_MININGINFO))
@@ -286,6 +329,7 @@ class Mining extends React.Component {
               toggleStaking={this.toggleStaking}
               miningInfo={this.props.miningInfo[pathDestination[0]]}
               miningInfoErrors={this.props.miningInfoErrors[pathDestination[0]]}
+              toggleBridging={this.toggleBridging}
             />
           );
       }

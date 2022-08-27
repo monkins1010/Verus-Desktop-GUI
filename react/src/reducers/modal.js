@@ -10,7 +10,8 @@ import {
   SEND_COIN,
   RECEIVE_COIN,
   CREATE_IDENTITY,
-  SHIELDCOINBASE
+  SHIELDCOINBASE,
+  STARTBRIDGEKEEPER
 } from "../util/constants/componentConstants";
 
 export const modal = (state = {
@@ -21,6 +22,9 @@ export const modal = (state = {
     isMessage: false
   },
   [SHIELDCOINBASE]: {
+    chainTicker: null,
+  },
+  [STARTBRIDGEKEEPER]: {
     chainTicker: null,
   },
   [RECEIVE_COIN]: {

@@ -17,6 +17,7 @@ import TransactionCard from "../../../../../containers/TransactionCard/Transacti
 import GeneratorCard from "../../../../../containers/GeneratorCard/GeneratorCard";
 import { FormControl, Select, MenuItem, Switch } from "@material-ui/core";
 import NetworkOverviewCard from "../../../../../containers/NetworkOverviewCard/NetworkOverviewCard";
+import AppsStyles from '../../apps.styles'
 
 export const MiningWalletRender = function() {
   const {
@@ -177,7 +178,8 @@ export const MiningWalletFunctions = function() {
     cpuData,
     miningInfo,
     addresses,
-    coinObj
+    coinObj,
+    toggleBridging
   } = props;
 
   const coinAddresses = addresses
@@ -193,7 +195,7 @@ export const MiningWalletFunctions = function() {
         marginBottom: 16,
         padding: 0,
         border: "none",
-        display: "flex"
+        display: "flex",
       }}
     >
       {coinObj.options.tags.includes(IS_VERUS) && (
@@ -202,13 +204,10 @@ export const MiningWalletFunctions = function() {
             display: "flex",
             alignItems: "center",
             flex: 1,
-            justifyContent: "space-between"
+            justifyContent: "space-between",
           }}
         >
-          <h6
-            className="card-title"
-            style={{ fontSize: 14, margin: 0, width: "max-content" }}
-          >
+          <h6 className="card-title" style={{ fontSize: 14, margin: 0, width: "max-content" }}>
             {"Staking"}
           </h6>
           <div style={{ color: `rgb(49, 101, 212)` }}>
@@ -227,13 +226,10 @@ export const MiningWalletFunctions = function() {
           display: "flex",
           alignItems: "center",
           flex: 1,
-          justifyContent: "space-between"
+          justifyContent: "space-between",
         }}
       >
-        <h6
-          className="card-title"
-          style={{ fontSize: 14, margin: 0, width: "max-content" }}
-        >
+        <h6 className="card-title" style={{ fontSize: 14, margin: 0, width: "max-content" }}>
           {"Mining"}
         </h6>
         <FormControl variant="outlined">
@@ -246,7 +242,7 @@ export const MiningWalletFunctions = function() {
                   : 0
                 : -1
             }
-            onChange={event => handleThreadChange(event, coin)}
+            onChange={(event) => handleThreadChange(event, coin)}
             disabled={miningState === MS_IDLE || loading}
           >
             {(miningState === MS_IDLE || loading) && (
@@ -265,37 +261,75 @@ export const MiningWalletFunctions = function() {
           </Select>
         </FormControl>
       </WalletPaper>
-      <WalletPaper
-        style={{
-          display: "flex",
-          alignItems: "center",
-          flex: 1,
-          justifyContent: "space-between"
-        }}
-      >
-        <h6
-          className="card-title"
-          style={{ fontSize: 14, margin: 0, width: "max-content" }}
-        >
-          {"Shielding"}
-        </h6>
-        <button
-          className="btn btn-primary border rounded"
-          type="button"
-          onClick={this.openShieldCoinbaseModal}
-          disabled={coinAddresses == null}
+      {!coinObj.options.tags.includes(IS_VERUS) && (
+        <WalletPaper
           style={{
-            fontSize: 14,
-            backgroundColor: "rgba(0,178,26,0)",
-            borderWidth: 0,
-            color: "rgb(133,135,150)",
-            borderColor: "rgb(133, 135, 150)",
-            fontWeight: "bold"
+            display: "flex",
+            alignItems: "center",
+            flex: 1,
+            justifyContent: "space-between",
           }}
         >
-          {"Shield Rewards"}
-        </button>
-      </WalletPaper>
+          <h6 className="card-title" style={{ fontSize: 14, margin: 0, width: "max-content" }}>
+            {"Shielding"}
+          </h6>
+          <button
+            className="btn btn-primary border rounded"
+            type="button"
+            onClick={this.openShieldCoinbaseModal}
+            disabled={coinAddresses == null}
+            style={{
+              fontSize: 14,
+              backgroundColor: "rgba(0,178,26,0)",
+              borderWidth: 0,
+              color: "rgb(133,135,150)",
+              borderColor: "rgb(133, 135, 150)",
+              fontWeight: "bold",
+            }}
+          >
+            {"Shield Rewards"}
+          </button>
+        </WalletPaper>
+      )}
+      {coinObj.id === "VRSCTEST" && (
+        <WalletPaper
+          style={{
+            display: "flex",
+            alignItems: "center",
+            flex: 1,
+            justifyContent: "space-between",
+          }}
+        >
+          <h6 className="card-title" style={{ fontSize: 14, margin: 0, width: "max-content" }}>
+            {"Bridgekeeper"}
+          </h6>
+          <div style={{ color: `rgb(49, 101, 212)` }}>
+            <Switch
+              checked={miningInfo?.bridgekeeperstatus?.serverrunning === true}
+              onChange={() => toggleBridging(coin)}
+              disabled={miningState === MS_IDLE}
+              value="bridging"
+              color="primary"
+            />
+          </div>
+          <button
+            className="btn btn-primary"
+            type="button"
+            onClick={this.startBridgekeeper}
+            disabled={false}
+            style={{
+              fontSize: 14,
+              backgroundColor: "rgba(0,178,26,0)",
+              borderWidth: 0,
+              color: "rgb(133,135,150)",
+              borderColor: "rgb(0,0,0)",
+              fontWeight: "bold",
+            }}
+          >
+            <i className="fas fa-cog" style={AppsStyles.topBarMenuItemIcon} />
+          </button>
+        </WalletPaper>
+      )}
     </WalletPaper>
   );
 };
