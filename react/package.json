@@ -71,9 +71,9 @@
     "static-eval": "2.0.2",
     "terminal-in-react": "git+https://github.com/VerusCoin/terminal-in-react.git",
     "utf-8-validate": "5.0.3",
-    "verus-typescript-primitives": "https://github.com/VerusCoin/verus-typescript-primitives.git",
-    "verus-wallet-endpoints": "https://github.com/VerusCoin/verus-wallet-endpoints.git",
-    "verus-zkedid-utils": "https://github.com/michaeltout/verus-zkedid-utils"
+    "verus-typescript-primitives": "git+https://github.com/VerusCoin/verus-typescript-primitives.git",
+    "verus-wallet-endpoints": "git+https://github.com/VerusCoin/verus-wallet-endpoints.git",
+    "verus-zkedid-utils": "git+https://github.com/michaeltout/verus-zkedid-utils.git"
   },
   "devDependencies": {
     "@babel/core": "7.0.0",
@@ -153,6 +153,7 @@
     "ini": "1.3.8",
     "socket.io": "4.5.3",
     "engine.io": "6.2.1",
+    "express": "4.17.3",
     "y18n": "5.0.5",
     "xmlhttprequest-ssl": "1.6.2",
     "ssri": "8.0.1",
@@ -171,6 +172,7 @@
     "jpeg-js": "0.4.4",
     "jsdom": "16.5.0",
     "jszip": "3.7.0",
+    "qs": "6.2.4",
     "tmpl": "1.0.5",
     "minimatch": "5.1.0",
     "nth-check": "2.0.1",
