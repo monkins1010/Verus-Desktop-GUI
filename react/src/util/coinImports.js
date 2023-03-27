@@ -10,7 +10,7 @@ export const decodeCoinImportFile = (importText) => {
   if (!isValidMultiverseName(rawCoinObj.id)) throw new Error("Invalid coin ID")
 
   rawCoinObj.options.dustThreshold = satsToCoins(rawCoinObj.options.dustThreshold)
-  rawCoinObj.options.txFee = satsToCoins(rawCoinObj.options.txFee)
+  rawCoinObj.options.txFee = rawCoinObj.options.txFee
 
   rawCoinObj.options.startupOptions = rawCoinObj.options.startupOptions.split('|')
   rawCoinObj.options.tags = rawCoinObj.options.tags.split('|')
