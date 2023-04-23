@@ -1921,7 +1921,7 @@ aes-js@3.0.0:
 
 "agama-wallet-lib@git+https://github.com/VerusCoin/agama-wallet-lib.git#dev":
   version "0.3.4"
-  resolved "git+https://github.com/VerusCoin/agama-wallet-lib.git#532d4d5566b1b2e73d7f706084ceefdc624736cf"
+  resolved "git+https://github.com/VerusCoin/agama-wallet-lib.git#c68ba44fa85e0069863bf11087ca25b8a5b5c5bb"
   dependencies:
     bigi "^1.4.2"
     bip32 "^1.0.2"
@@ -2826,16 +2826,7 @@ bs58@^4.0.0:
   dependencies:
     base-x "^3.0.2"
 
-bs58check@<3.0.0, bs58check@^2.0.0, bs58check@^2.1.1, bs58check@^2.1.2:
-  version "2.1.2"
-  resolved "https://registry.yarnpkg.com/bs58check/-/bs58check-2.1.2.tgz#53b018291228d82a5aa08e7d796fdafda54aebfc"
-  integrity sha512-0TS1jicxdU09dwJMNZtVAfzPi6Q6QeN0pM1Fkzrjn+XYHvzMKPU3pHVpva+769iNVSfIYWf7LJ6WR+BuuMf8cA==
-  dependencies:
-    bs58 "^4.0.0"
-    create-hash "^1.1.0"
-    safe-buffer "^5.1.2"
-
-"bs58check@https://github.com/bitcoinjs/bs58check":
+bs58check@<3.0.0, bs58check@^2.0.0, bs58check@^2.1.1, bs58check@^2.1.2, "bs58check@https://github.com/bitcoinjs/bs58check":
   version "2.1.2"
   resolved "https://github.com/bitcoinjs/bs58check#12b3e700f355c5c49d0be3f8fc29be6c66e753e9"
   dependencies:

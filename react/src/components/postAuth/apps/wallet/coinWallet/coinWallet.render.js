@@ -165,28 +165,6 @@ export const CoinWalletRender = function() {
           ? WalletRenderCurrencyFunctions.call(this)
           : null
       }
-      {this.props.activatedCoins[this.props.coin] &&
-        this.props.activatedCoins[this.props.coin].id === "ZEC" &&
-        this.props.activatedCoins[this.props.coin].mode === ELECTRUM && (
-          <WalletPaper
-            style={{
-              marginBottom: 16,
-              padding: 8,
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
-            <Link
-              href={"#"}
-              style={{ fontWeight: "bold", textAlign: "center" }}
-              onClick={() => shell.openExternal(WIKI_LITE_TO_NATIVE)}
-            >
-              {
-                "Warning: Zcash lite mode servers are offline as of the latest Zcash network upgrade. We recommend importing your private key (accessible through the receive menu) into a different wallet, or into Zcash native mode."
-              }
-            </Link>
-          </WalletPaper>
-        )}
       {
         /* TODO: Add a way to detect if a coin allows migration */ this.props.coin === "RFOX" && (
           <MigrationHelper
