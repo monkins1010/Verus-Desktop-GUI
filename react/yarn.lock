@@ -12353,7 +12353,7 @@ verror@1.10.0:
 
 "verus-typescript-primitives@git+https://github.com/VerusCoin/verus-typescript-primitives.git":
   version "1.0.0"
-  resolved "git+https://github.com/VerusCoin/verus-typescript-primitives.git#8eac2f7424938bf600ee29ae4d7f72b64d0d4b78"
+  resolved "git+https://github.com/VerusCoin/verus-typescript-primitives.git#fea7efdb12236bdbf8528cb8313e19fad0e3d420"
   dependencies:
     "@types/bs58check" "2.1.0"
     "@types/create-hash" "1.2.2"

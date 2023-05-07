@@ -656,8 +656,9 @@ export const DashboardRenderIds = function() {
             : idObj.balances.reserve[selectedCurrency] != null
             ? idObj.balances.reserve[selectedCurrency]
             : 0;
+
         const spendableBalance = Number(
-          (tBalance + zBalance).toFixed(8)
+          (Number(tBalance) + Number(zBalance)).toFixed(8)
         );
 
         const isTimelockDelay = checkFlag(identity.flags, TIMELOCK_DELAY_FLAG);

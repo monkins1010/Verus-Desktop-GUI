@@ -231,7 +231,7 @@ class VerusId extends React.Component {
       else {
         if (activeId.idIndex != null && activeId.chainTicker != null) {
           const activeIdentity = this.props.identities[activeId.chainTicker]
-            ? this.props.identities[activeId.chainTicker][activeId.idIndex]
+            ? JSON.parse(JSON.stringify(this.props.identities[activeId.chainTicker][activeId.idIndex])) // Deep copy
             : null;
 
           if (!activeIdentity) {

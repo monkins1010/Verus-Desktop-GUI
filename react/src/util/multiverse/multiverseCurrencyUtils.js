@@ -75,7 +75,7 @@ export const getCurrencyInfo = (
     minpreconversion.length > 0 &&
     minpreconversion.every((n) => n > 0) &&
     supply === 0;
-  const ownedIdentity = ownedIdentities.find((id) => id.identity.name === name);
+  const ownedIdentity = ownedIdentities.find((id) => id.identity.name.toLowerCase() === name.toLowerCase());
   const spendableTo =
     !isFailed &&
     (isReserve || (isPending && conversions != null && conversions.length > 0));
