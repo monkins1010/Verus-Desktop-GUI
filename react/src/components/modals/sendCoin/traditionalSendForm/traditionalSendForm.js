@@ -312,7 +312,7 @@ class TraditionalSendForm extends React.Component {
         fromCurrencyInfo.currency != null &&
         ((fromCurrencyInfo.currency.nativecurrencyid != null &&
           fromCurrencyInfo.currency.nativecurrencyid.type === 9) ||
-          fromCurrencyInfo.currency.currencyid === "iJhCezBExJHvtyH3fGhNnt2NhU4Ztkf2yq")
+          fromCurrencyInfo.currency.currencyid === "i5w5MuNik5NtLcYmNzcvaoixooEebB6MGV")
       ) &&
       (sendTo == null || (sendTo.length !== 0 && !checkAddrValidity(sendTo, mode, chainTicker)))
     ) {

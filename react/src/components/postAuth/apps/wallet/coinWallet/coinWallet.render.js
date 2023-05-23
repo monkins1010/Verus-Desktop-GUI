@@ -26,7 +26,8 @@ import {
   IS_PBAAS,
   Z_ONLY,
   LOCK_WITH_DELAY,
-  ELECTRUM
+  ELECTRUM,
+  NATIVE
 } from "../../../../../util/constants/componentConstants";
 import { VirtualizedTable } from '../../../../../containers/VirtualizedTable/VirtualizedTable'
 import { timeConverter } from '../../../../../util/displayUtil/timeUtils'
@@ -161,7 +162,8 @@ export const CoinWalletRender = function() {
       {
         /* TODO: Change this when currencies get to mainnet */
         this.props.activatedCoins[this.props.coin] &&
-        this.props.activatedCoins[this.props.coin].options.tags.includes(IS_PBAAS)
+        this.props.activatedCoins[this.props.coin].options.tags.includes(IS_PBAAS) &&
+        this.props.activatedCoins[this.props.coin].mode === NATIVE
           ? WalletRenderCurrencyFunctions.call(this)
           : null
       }
@@ -990,8 +992,7 @@ export const WalletRenderCurrencyFunctions = function() {
           />
         </WalletPaper>
       </WalletPaper>
-      {this.props.activatedCoins[coin] &&
-        this.props.activatedCoins[coin].options.tags.includes(IS_PBAAS) && (
+      {coin === "VRSCTEST" && (
           <WalletPaper
             style={{
               marginBottom: 16,

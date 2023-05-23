@@ -18,7 +18,8 @@ import {
   KOMODO_CONF_NAME,
   ERC20,
   VERUSTEST_CONF_NAME,
-  PIRATE_DAEMON
+  PIRATE_DAEMON,
+  VERUS_CONF_NAME
 } from './constants/componentConstants'
 import { electrum, general } from 'verus-wallet-endpoints'
 import networks from 'agama-wallet-lib/src/bitcoinjs-networks'
@@ -110,7 +111,7 @@ export const getCoinObj = (chainTicker, chainDefinition) => {
     }
 
     // Determine if chain is pbaas compatible, and if it is a pbaas root chain
-    if (chainTickerUc === 'VRSCTEST') {
+    if (chainTickerUc === 'VRSC') {
       tags = {
         ...tags,
         [IS_ZCASH]: true,
@@ -120,7 +121,7 @@ export const getCoinObj = (chainTicker, chainDefinition) => {
       };
       available_modes[NATIVE] = true
       coinObj.options.daemon = DEFAULT_DAEMON
-      coinObj.options.confName = VERUSTEST_CONF_NAME;
+      coinObj.options.confName = VERUS_CONF_NAME;
     }
 
     if (chainTickerUc === 'VRSCTEST' || chainTickerUc === 'VRSC') {
@@ -187,9 +188,9 @@ export const getPbaasChain = (chainTicker, chainDefinition) => {
       daemon: DEFAULT_DAEMON,
       startupOptions: [`-chain=${chainTickerLc}`],
       dirNames: {
-        darwin: `VerusTest/pbaas/${chainDefinition.currencyidhex}`,
-        linux: `.verustest/pbaas/${chainDefinition.currencyidhex}`,
-        win32: `VerusTest/pbaas/${chainDefinition.currencyidhex}`,
+        darwin: `Verus/pbaas/${chainDefinition.currencyidhex}`,
+        linux: `.verus/pbaas/${chainDefinition.currencyidhex}`,
+        win32: `Verus/pbaas/${chainDefinition.currencyidhex}`,
       },
       tags: [IS_ZCASH, IS_PBAAS, IS_VERUS, IS_SAPLING],
       dustThreshold: 0.00001,

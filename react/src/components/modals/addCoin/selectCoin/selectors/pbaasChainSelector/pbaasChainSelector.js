@@ -27,21 +27,21 @@ class PbaasChainSelector extends React.Component {
       nameMap: {} 
     };
 
-    this.addVrsctest = this.addVrsctest.bind(this);
+    this.addVrsc = this.addVrsc.bind(this);
     this.fetchPbaasChains = this.fetchPbaasChains.bind(this);
     this.selectPbaasChain = this.selectPbaasChain.bind(this);
   }
 
   componentDidMount() {
     if (Object.values(this.props.activatedCoins).some(
-      (coinObj) => coinObj.id === "VRSCTEST"
+      (coinObj) => coinObj.id === "VRSC" && coinObj.mode === NATIVE
     )) {
       this.fetchPbaasChains();
     } 
   }
 
-  addVrsctest() {
-    this.props.setSelectedCoin(getCoinObj("VRSCTEST"), () => {
+  addVrsc() {
+    this.props.setSelectedCoin(getCoinObj("VRSC"), () => {
       this.props.chooseCoin();
     });
   }
@@ -72,10 +72,10 @@ class PbaasChainSelector extends React.Component {
         loadingText: "Finding chains...",
       },
       async () => {
-        const chainTicker = "VRSCTEST";
+        const chainTicker = "VRSC";
 
         try {
-          //TODO Adapt to work with more than just VRSCTEST
+          //TODO Adapt to work with more than just VRSC
           const response = await getAllCurrencies(NATIVE, chainTicker, {
             systemtype: "pbaas"
           });

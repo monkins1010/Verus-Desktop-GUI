@@ -240,6 +240,7 @@ export const KOMODO_DAEMON = 'komodod'
 export const ZCASH_CONF_NAME = 'zcash'
 export const KOMODO_CONF_NAME = 'komodo'
 export const VERUSTEST_CONF_NAME = 'vrsctest'
+export const VERUS_CONF_NAME = 'vrsc'
 
 // Coin wallet screen
 export const NATIVE_BALANCE = 'native'

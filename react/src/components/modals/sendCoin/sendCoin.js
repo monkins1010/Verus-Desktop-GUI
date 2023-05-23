@@ -134,7 +134,7 @@ class SendCoin extends React.Component {
                   ((fromCurrencyInfo.currency.nativecurrencyid != null &&
                     fromCurrencyInfo.currency.nativecurrencyid.type === 9) ||
                     fromCurrencyInfo.currency.currencyid ===
-                      "iJhCezBExJHvtyH3fGhNnt2NhU4Ztkf2yq") &&
+                      "i5w5MuNik5NtLcYmNzcvaoixooEebB6MGV") &&
                   checkAddrValidity(toAddress, ETH, "ETH") // TODO: Generalize
                     ? "iCtawpxUiCc2sEupt7Z4u8SDAncGZpgSKm" // vETH
                     : undefined,

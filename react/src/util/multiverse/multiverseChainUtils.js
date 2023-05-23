@@ -11,7 +11,7 @@ import React from 'react';
  */
 export const isPbaasChain = (chain, includeVrsc = false) => {
   return includeVrsc ? 
-      /*chain === 'VRSC' || */chain === 'VRSCTEST' || Config.general.main.reservedChains.indexOf(chain) === -1
+      chain === 'VRSC' || Config.general.main.reservedChains.indexOf(chain) === -1
     :
       Config.general.main.reservedChains.indexOf(chain) === -1
 }

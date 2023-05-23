@@ -291,7 +291,7 @@ export const MiningWalletFunctions = function() {
           </button>
         </WalletPaper>
       )}
-      {coinObj.id === "VRSCTEST" && (
+      {coinObj.id === "VRSC" && (
         <WalletPaper
           style={{
             display: "flex",

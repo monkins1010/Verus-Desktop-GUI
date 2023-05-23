@@ -78,8 +78,8 @@ const mapStateToProps = (state) => {
     activatedCoins: state.coins.activatedCoins,
     allCurrencies: state.ledger.allCurrencies,
     allBlockchains: {
-      ["VRSCTEST"]: state.ledger.allCurrencies["VRSCTEST"]
-        ? state.ledger.allCurrencies["VRSCTEST"].filter((currency) =>
+      ["VRSC"]: state.ledger.allCurrencies["VRSC"]
+        ? state.ledger.allCurrencies["VRSC"].filter((currency) =>
             checkFlag(currency.options, IS_PBAAS_FLAG)
           )
         : [],

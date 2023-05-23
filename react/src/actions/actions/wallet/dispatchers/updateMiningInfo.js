@@ -17,7 +17,7 @@ export const updateMiningInfo = async (state, dispatch, mode, chainTicker) => {
 
   if (mode === NATIVE) {
     try {
-      const apiResult = await getMiningInfo(mode, chainTicker, chainTicker === "VRSCTEST")
+      const apiResult = await getMiningInfo(mode, chainTicker, chainTicker === "VRSC")
       if (apiResult.msg === 'success') {
         miningInfoAction = {...miningInfoAction, type: SET_COIN_MININGINFO, miningInfo: apiResult.result}
       } else {

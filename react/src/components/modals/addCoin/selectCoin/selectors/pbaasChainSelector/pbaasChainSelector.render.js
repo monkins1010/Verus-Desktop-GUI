@@ -1,11 +1,11 @@
 import { TextField } from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import React from "react";
-import { CHAIN_FALLBACK_IMAGE } from "../../../../../../util/constants/componentConstants";
+import { CHAIN_FALLBACK_IMAGE, NATIVE } from "../../../../../../util/constants/componentConstants";
 
 export const PbaasChainSelectorRender = function() {
   return Object.values(this.props.activatedCoins).some(
-    (coinObj) => coinObj.id === "VRSCTEST"
+    (coinObj) => coinObj.id === "VRSC" && coinObj.mode === NATIVE
   )
     ? PbaasCoinSelectorRender.call(this)
     : PbaasChainInactiveRender.call(this);
@@ -24,14 +24,14 @@ export const PbaasChainInactiveRender = function() {
         }}
       >
         {
-          "At the moment, you can only add, convert, and use Verus PBaaS (Public Blockchains as a Service) chains on the Verus Testnet. If you'd like to try this out, add VRSCTEST!"
+          "At the moment, you can only add, convert, and use Verus PBaaS (Public Blockchains as a Service) chains on the Verus Network in native mode."
         }
       </div>
       <div className="d-flex d-sm-flex justify-content-center justify-content-sm-center">
         <button
           className="btn btn-primary"
           type="button"
-          onClick={this.addVrsctest}
+          onClick={this.addVrsc}
           style={{
             fontSize: 14,
             backgroundColor: "rgb(49, 101, 212)",
@@ -42,7 +42,7 @@ export const PbaasChainInactiveRender = function() {
             marginTop: 30,
           }}
         >
-          <strong>{"Add VRSCTEST"}</strong>
+          <strong>{"Add VRSC"}</strong>
         </button>
       </div>
     </React.Fragment>

@@ -90,7 +90,7 @@ export const CurrenciesCardRender = (
         CurrencyTableRender(displayCurrencies, openCurrencyInfo, props)
       ) : verusCoins.length == 0 ? (
         <a href="#" style={{ color: "rgb(49, 101, 212)" }} onClick={() => openAddCoinModal()}>
-          {"Add VRSCTEST to discover new currencies!"}
+          {"Add VRSC to discover new currencies!"}
         </a>
       ) : (
         <div>{"No currencies found."}</div>
