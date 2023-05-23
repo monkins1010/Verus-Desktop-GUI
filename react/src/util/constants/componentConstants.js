@@ -102,7 +102,7 @@ export const CHECK_ZCASH_PARAMS = 'zcashparamsexist'
 export const DL_ZCASH_PARAMS = 'zcparamsdl'
 export const AUTHENTICATE = 'auth'
 export const CHECK_AUTHENTICATION = 'check_auth'
-export const LOG_OUT = 'logout' 
+export const LOG_OUT = 'logout'
 export const GET_STATIC_SYSTEM_DATA = 'get_static_system_data'
 export const API_GET_CPU_TEMP = 'get_cpu_temp'
 export const API_GET_CPU_LOAD = 'get_cpu_load'
@@ -116,7 +116,7 @@ export const API_LOAD_UPDATE_LOG = 'load_update_log'
 export const API_BACKUP_APPDATA = 'backup_appdata'
 export const API_EXPORT_TX_CSV = 'export_transaction_csv'
 
-// Local Currency Lists 
+// Local Currency Lists
 export const BLACKLISTS = 'blacklists'
 export const WHITELISTS = 'whitelists'
 
@@ -240,7 +240,7 @@ export const KOMODO_DAEMON = 'komodod'
 export const ZCASH_CONF_NAME = 'zcash'
 export const KOMODO_CONF_NAME = 'komodo'
 export const VERUSTEST_CONF_NAME = 'vrsctest'
-export const VERUS_CONF_NAME = 'vrsc'
+export const VERUS_CONF_NAME = 'VRSC'
 
 // Coin wallet screen
 export const NATIVE_BALANCE = 'native'
@@ -278,7 +278,7 @@ export const UNKNOWN_TX = 'unknown'
 export const INTEREST_TX = 'interest'
 export const REJECTED_CONFIRMATIONS = -1
 
-// Fallback image 
+// Fallback image
 export const CHAIN_FALLBACK_IMAGE = 'assets/images/cryptologo/defaultChain.png'
 
 // Addcoin native options
@@ -290,7 +290,7 @@ export const NATIVE_MINE = '-gen'
 export const NATIVE_MINE_THREADS = '-genproclimit='
 export const NATIVE_BOOTSTRAP = '-bootstrap'
 
-// ZCash params 
+// ZCash params
 export const ZCPARAMS_VERUS = 'verus.io'
 export const ZCPARAMS_KOMODO = 'agama.komodoplatform.com'
 export const ZCPARAMS_ZCASH = 'z.cash'
@@ -338,7 +338,7 @@ export const START_AT_LAST_LOCATION = 'start_at_last_location'
 export const CUSTOM_START_LOCATION = 'custom_start_location'
 export const PLACEHOLDER = 'placeholder'
 
-// General Settings 
+// General Settings
 export const MAIN_SETTINGS = 'main'
 export const HOST = 'host'
 export const APP_PORT = 'agamaPort'
@@ -359,7 +359,7 @@ export const REFUND_ADDR = 'refundAddress'
 export const REFUND_FROM_SOURCE = 'refundFromSource'
 export const DATA_DIR = 'dataDir'
 
-// Send coin form 
+// Send coin form
 export const TRANSPARENT_FUNDS = 'Transparent Funds'
 export const CONFIRMED_TRANSPARENT_FUNDS = 'Confirmed transparent funds'
 
