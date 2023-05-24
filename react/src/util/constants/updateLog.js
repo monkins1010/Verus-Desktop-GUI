@@ -1,11 +1,15 @@
 import { loadUsers, saveUsers } from "../api/users/userData";
 import { getNewUser } from "../../actions/actionCreators";
 import { equalizeProperties } from "../objectUtil";
-import { ELECTRUM, NATIVE, ETH, ERC20 } from "./componentConstants";
+import { ELECTRUM, NATIVE, ETH, ERC20, IS_PBAAS, IS_PBAAS_ROOT } from "./componentConstants";
 import { saveLocalBlacklist, saveLocalWhitelist } from "../api/currencies/localCurrencyData";
 
 // Describes the changes that take place during certain versions
 export const UPDATE_LOG_HISTORY = {
+  ["1.0.5"]: {
+    breaking: false,
+    desc: "Add IS_PBAAS flag to VRSC and remove it from VRSCTEST."
+  },
   ["0.7.2-10"]: {
     breaking: true,
     desc:
@@ -21,6 +25,73 @@ export const UPDATE_LOG_HISTORY = {
 
 // Contains the functions to execute on upgrades, all update functions must be idempotent
 export const UPDATE_FUNCTIONS = {
+  ["1.0.5"]: async () => {
+    try {
+      let loadedUsers = await loadUsers()
+  
+      for (let userId in loadedUsers) {
+        // Add property to userObjs
+        let equalizedUser = equalizeProperties(
+          getNewUser(),
+          loadedUsers[userId],
+          (stringKey) => {
+            const propertyArr = stringKey.split('.')
+            return (
+              propertyArr.length > 1 &&
+              (propertyArr[0] == "startCoins" ||
+                propertyArr[0] == "lastCoins")
+            );
+          }
+        )
+
+        let totalCoins = {
+          ...equalizedUser.result.lastCoins,
+          ...equalizedUser.result.startCoins
+        }
+
+        // Change coinObjs
+        for (let chainTicker in totalCoins) {
+          if (chainTicker === "VRSC") {
+            equalizedUser.changed = true;
+
+            if (!totalCoins[chainTicker].options.tags.includes(IS_PBAAS)) {
+              totalCoins[chainTicker].options.tags = [...totalCoins[chainTicker].options.tags, IS_PBAAS]
+            }
+
+            if (!totalCoins[chainTicker].options.tags.includes(IS_PBAAS_ROOT)) {
+              totalCoins[chainTicker].options.tags = [...totalCoins[chainTicker].options.tags, IS_PBAAS_ROOT]
+            }
+          } else if (chainTicker === "VRSCTEST") {
+            equalizedUser.changed = true;
+
+            if (totalCoins[chainTicker].options.tags.includes(IS_PBAAS)) {
+              totalCoins[chainTicker].options.tags = totalCoins[chainTicker].options.tags.filter(x => x !== IS_PBAAS)
+            }
+
+            if (totalCoins[chainTicker].options.tags.includes(IS_PBAAS_ROOT)) {
+              totalCoins[chainTicker].options.tags = totalCoins[chainTicker].options.tags.filter(x => x !== IS_PBAAS_ROOT)
+            }
+          }
+
+          if (equalizedUser.result.lastCoins[chainTicker] != null) {
+            equalizedUser.result.lastCoins[chainTicker] = totalCoins[chainTicker]
+          }
+
+          if (equalizedUser.result.startCoins[chainTicker] != null) {
+            equalizedUser.result.startCoins[chainTicker] = totalCoins[chainTicker]
+          }
+        }
+  
+        if (equalizedUser.changed) {
+          loadedUsers[userId] = equalizedUser.result
+        }
+      }
+      
+      await saveUsers(loadedUsers)
+    } catch (e) {
+      throw e
+    }
+  },
   ["0.7.2-10"]: async () => {
     try {
       let loadedUsers = await loadUsers()
