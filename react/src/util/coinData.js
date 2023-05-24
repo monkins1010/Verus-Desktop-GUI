@@ -185,7 +185,7 @@ export const getPbaasChain = (chainTicker, chainDefinition) => {
     },
     options: {
       daemon: DEFAULT_DAEMON,
-      startupOptions: [`-chain=${chainTickerLc}`],
+      startupOptions: [`-chain=${chainTickerLc}`, '-testnet'],
       dirNames: {
         darwin: `VerusTest/pbaas/${chainDefinition.currencyidhex}`,
         linux: `.verustest/pbaas/${chainDefinition.currencyidhex}`,
