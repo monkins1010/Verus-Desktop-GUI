@@ -1,6 +1,6 @@
 export const testConfig = {
   host: "127.0.0.1",
-  agamaPort: 17775,
+  agamaPort: 17776,
   maxDescriptors: {
     darwin: 90000,
     linux: 1000000
