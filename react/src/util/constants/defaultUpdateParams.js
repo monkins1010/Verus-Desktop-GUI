@@ -730,7 +730,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
           needs_update: true,
           busy: false,
           location_restrictions: [/*'@post_auth/apps/wallet'*/],
-          location_and_type_restrictions: [[`@post_auth`, IS_PBAAS, true], [`@post_auth`, IS_PBAAS_ROOT, false]]
+          location_and_type_restrictions: []
         },
         interval_info: {
           expire_id: null,
@@ -746,7 +746,7 @@ export const DEFAULT_COIN_UPDATE_PARAMS = (ticker) => ({
           needs_update: true,
           busy: false,
           location_restrictions: [/*'@post_auth/apps/wallet'*/],
-          location_and_type_restrictions: [[`@post_auth`, IS_PBAAS, true], [`@post_auth`, IS_PBAAS_ROOT, false]]
+          location_and_type_restrictions: []
         },
         interval_info: {
           expire_id: null,
