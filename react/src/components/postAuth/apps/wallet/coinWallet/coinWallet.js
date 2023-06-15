@@ -224,6 +224,10 @@ class CoinWallet extends React.Component {
   }
 
   componentDidMount() {
+    if (this.props.activatedCoins[this.props.coin].mode !== NATIVE) {
+      this.setPreferredCurrency(this.props.coin);
+    }
+
     this.initState();
   }
 

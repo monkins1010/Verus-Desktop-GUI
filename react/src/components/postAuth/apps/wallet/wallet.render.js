@@ -164,7 +164,7 @@ export const WalletCardRender = function(coinObj) {
                   </h5>
                 </div>
               </div>
-              {coinObj.options.tags.includes(IS_PBAAS) && <CurrencySelector coin={coinObj.id} />}
+              {coinObj.options.tags.includes(IS_PBAAS) && coinObj.mode === NATIVE && <CurrencySelector coin={coinObj.id} />}
             </div>
           </div>
         </div>
