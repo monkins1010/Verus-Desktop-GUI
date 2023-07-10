@@ -91,9 +91,12 @@ class Bridgekeeper extends React.Component {
   async getBridgekeeperInfo() {
     const { id } = this.props.activeCoin
     const statusReply = await bridgekeeperStatus(id);
-    if (statusReply?.result && statusReply?.result?.logs?.length > 1)
+
+    if (statusReply?.result && statusReply?.result?.logs?.length > 1) {
       this.updateLog(statusReply?.result?.logs);
-    else {
+    } else if (statusReply?.result && statusReply.result.serverrunning) {
+      this.updateLog("Bridgekeeper server running but no status information available yet...");
+    } else {
       this.updateLog("No status information available yet, or bridge not running");
     }
   }
