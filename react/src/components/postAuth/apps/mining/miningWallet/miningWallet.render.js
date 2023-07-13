@@ -10,8 +10,7 @@ import {
   MS_MINING,
   STAKING_CARD,
   MINING_CARD,
-  IS_VERUS,
-  SYNCING
+  IS_VERUS
 } from "../../../../../util/constants/componentConstants";
 import WalletBooklet from "../../../../../containers/WalletBooklet/WalletBooklet";
 import TransactionCard from "../../../../../containers/TransactionCard/TransactionCard";
@@ -322,7 +321,6 @@ export const MiningWalletFunctions = function() {
             <Switch
               checked={miningInfo?.bridgekeeperstatus?.serverrunning === true}
               onChange={() => toggleBridging(coin)}
-              disabled={miningState === MS_IDLE || coinObj.status === SYNCING}
               value="bridging"
               color="primary"
             />
