@@ -7,15 +7,51 @@ import InputAdornment from "@material-ui/core/InputAdornment";
 import IconButton from '@material-ui/core/IconButton';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import Drag from '@material-ui/icons/AddCircle';
 
 export const BridgekeeperRender = function () {
   const { startBridgekeeper, getBridgekeeperInfo, state, back, props, updateInput, setConfFile, openInfura, handleClickShowPrivkey, handleMouseDownPrivkey } =
     this;
-  const { loading, continueDisabled, formStep, txData, logData, ethKey, infuraNode, showPassword } = state;
+  const { loading, continueDisabled, formStep, txData, logData, ethKey, infuraNode, showPassword, bridgeKeeperActive } = state;
   const { closeModal } = props;
 
   return (
     <div style={{ width: "100%", paddingLeft: 35, paddingRight: 35 }}>
+      <TextField
+        error={false}
+        label="Bridgekeeper Status"
+        variant="outlined"
+        name="status"
+        contentEditable={false}
+        value={bridgeKeeperActive ? "Running" : "Not Running"}
+        style={{ marginTop: 10, width: "100%" }}
+        InputProps={{
+          endAdornment: <InputAdornment position="end">
+            <IconButton
+              aria-label="toggle privatekey visibility"
+              edge="end"
+              disabled={true}
+            >
+              {bridgeKeeperActive ? <div
+                style={{
+                  width: "20px",
+                  height: "20px",
+                  backgroundColor: "lime",
+                  borderRadius: "50%",
+                }}
+              ></div> : <div
+                style={{
+                  width: "20px",
+                  height: "20px",
+                  backgroundColor: "red",
+                  borderRadius: "50%",
+                }}
+              ></div>}
+            </IconButton>
+          </InputAdornment>
+        }}
+
+      />
       <TextField
         error={false}
         label="Enter Ethereum Private Key"
@@ -25,7 +61,7 @@ export const BridgekeeperRender = function () {
         placeholder="Hex Key"
         name="ethKey"
         value={ethKey}
-        style={{ marginTop: 5, width: "100%" }}
+        style={{ marginTop: 10, width: "100%" }}
         InputProps={{
           endAdornment: <InputAdornment position="end">
             <IconButton
@@ -34,9 +70,9 @@ export const BridgekeeperRender = function () {
               onMouseDown={handleMouseDownPrivkey}
               edge="end"
             >
-            {showPassword ? <VisibilityOff /> : <Visibility />}
-          </IconButton>
-        </InputAdornment>
+              {showPassword ? <VisibilityOff /> : <Visibility />}
+            </IconButton>
+          </InputAdornment>
         }}
       />
       <TextField
@@ -50,8 +86,8 @@ export const BridgekeeperRender = function () {
         style={{ marginTop: 10, width: "100%" }}
       />
       <Link href="#" onClick={() => {
-           openInfura();
-        }}>learn more at infura.io.
+        openInfura();
+      }}>learn more at infura.io.
       </Link>
       <div
         style={{
@@ -78,7 +114,7 @@ export const BridgekeeperRender = function () {
           color="primary"
           style={{ marginTop: 10 }}
         >
-          {"Status"}
+          {"show logs."}
         </Button>
       </div>
       <pre class="prettyprint" id="log">
