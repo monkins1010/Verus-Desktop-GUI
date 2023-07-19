@@ -10,9 +10,9 @@ import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import Drag from '@material-ui/icons/AddCircle';
 
 export const BridgekeeperRender = function () {
-  const { startBridgekeeper, getBridgekeeperInfo, state, back, props, updateInput, setConfFile, openInfura, handleClickShowPrivkey, handleMouseDownPrivkey } =
+  const { startBridgekeeper, getBridgekeeperInfo, state, back, props, updateInput, setConfFile, openInfura } =
     this;
-  const { loading, continueDisabled, formStep, txData, logData, ethKey, infuraNode, showPassword, bridgeKeeperActive } = state;
+  const { loading, continueDisabled, formStep, txData, logData, infuraNode, bridgeKeeperActive } = state;
   const { closeModal } = props;
 
   return (
@@ -51,29 +51,6 @@ export const BridgekeeperRender = function () {
           </InputAdornment>
         }}
 
-      />
-      <TextField
-        error={false}
-        label="Enter Ethereum Private Key"
-        variant="outlined"
-        type={showPassword ? 'text' : 'password'}
-        onChange={updateInput}
-        placeholder="Hex Key"
-        name="ethKey"
-        value={ethKey}
-        style={{ marginTop: 10, width: "100%" }}
-        InputProps={{
-          endAdornment: <InputAdornment position="end">
-            <IconButton
-              aria-label="toggle privatekey visibility"
-              onClick={handleClickShowPrivkey}
-              onMouseDown={handleMouseDownPrivkey}
-              edge="end"
-            >
-              {showPassword ? <VisibilityOff /> : <Visibility />}
-            </IconButton>
-          </InputAdornment>
-        }}
       />
       <TextField
         error={false}
