@@ -24,9 +24,7 @@ class Bridgekeeper extends React.Component {
       formData: {},
       continueDisabled: true,
       logData: null,
-      ethKey: '',
       infuraNode: '',
-      showPassword: false,
       bridgeKeeperActive: false
     }
 
@@ -37,16 +35,13 @@ class Bridgekeeper extends React.Component {
     this.getBridgekeeperInfo = this.getBridgekeeperInfo.bind(this)
     this.updateInput = this.updateInput.bind(this)
     this.openInfura = this.openInfura.bind(this)
-    this.handleClickShowPrivkey = this.handleClickShowPrivkey.bind(this)
-    this.handleMouseDownPrivkey = this.handleMouseDownPrivkey.bind(this)
   }
 
   async componentDidMount() {
     const { id } = this.props.activeCoin
     const { result } = await getConfFile(id)
-    const { privatekey, ethnode } = result;
+    const { ethnode } = result;
 
-    if (privatekey) this.setState({ ethKey: privatekey });
     if (ethnode) this.setState({ infuraNode: ethnode });
     const statusReply = await bridgekeeperStatus(id);
 
@@ -56,13 +51,6 @@ class Bridgekeeper extends React.Component {
 
   }
 
-  handleClickShowPrivkey() {
-    this.setState({ showPassword: !this.state.showPassword });
-  }
-
-  handleMouseDownPrivkey(event) {
-    event.preventDefault();
-  };
 
   getFormData(formData) {
     this.setState({ formData })
@@ -115,7 +103,7 @@ class Bridgekeeper extends React.Component {
   async setConfFile() {
     const { id } = this.props.activeCoin
     this.updateLog("Updating vETH .conf file");
-    const confReply = await updateConfFile(id, this.state.ethKey, this.state.infuraNode);
+    const confReply = await updateConfFile(id, null, this.state.infuraNode);
     if (confReply?.result)
       this.updateLog(confReply.result);
   }
